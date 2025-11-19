@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { IconCheck, IconX, IconEye } from '@tabler/icons-react';
+import { IconCheck, IconX, IconEye, IconChevronDown, IconChevronUp, IconArrowsSort } from '@tabler/icons-react';
 import { config } from '@/config/administrative-config';
 
 interface Payment {
@@ -26,10 +26,44 @@ export default function PaymentApproval() {
   const [error, setError] = useState<string | null>(null);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [showEvidenceModal, setShowEvidenceModal] = useState(false);
+  const [evidenceError, setEvidenceError] = useState(false);
+  const [sortColumn, setSortColumn] = useState<keyof Payment | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
     loadPendingPayments();
   }, []);
+
+  const handleSort = (column: keyof Payment) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('desc');
+    }
+  };
+
+  const getSortedPayments = () => {
+    if (!sortColumn) return payments;
+
+    return [...payments].sort((a, b) => {
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
+      
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+      
+      const aString = String(aValue || '');
+      const bString = String(bValue || '');
+      
+      if (sortDirection === 'asc') {
+        return aString.localeCompare(bString);
+      } else {
+        return bString.localeCompare(aString);
+      }
+    });
+  };
 
   const loadPendingPayments = async () => {
     try {
@@ -82,23 +116,35 @@ export default function PaymentApproval() {
   };
 
   const getStatusBadge = (status: string) => {
-    const statusMap: Record<string, { text: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-      approved: { text: 'Aprobado', variant: 'default' },
-      pending: { text: 'Pendiente', variant: 'secondary' },
-      rejected: { text: 'Rechazado', variant: 'destructive' },
+    const statusLower = status.toLowerCase();
+    const statusMap: Record<string, { text: string; className: string }> = {
+      approved: { text: 'Aprobado', className: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20' },
+      pending: { text: 'Pendiente', className: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20' },
+      rejected: { text: 'Rechazado', className: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20' }
     };
-    const statusInfo = statusMap[status.toLowerCase()] || { text: status, variant: 'outline' };
-    return <Badge variant={statusInfo.variant}>{statusInfo.text}</Badge>;
+    const statusInfo = statusMap[statusLower] || { text: status, className: 'bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/20' };
+    return <Badge variant="outline" className={statusInfo.className}>{statusInfo.text}</Badge>;
   };
 
   const openEvidenceModal = (payment: Payment) => {
     setSelectedPayment(payment);
     setShowEvidenceModal(true);
+    setEvidenceError(false);
+  };
+
+  const resolveEvidenceUrl = (path?: string | null) => {
+    if (!path) return null;
+    const trimmed = path.trim();
+    if (!trimmed) return null;
+    return /^https?:\/\//i.test(trimmed)
+      ? trimmed
+      : `${config.apiUrl}/storage/${trimmed}`;
   };
 
   return (
     <AdministrativeLayout title="Validar Pagos">
-      <div className="p-6 space-y-6">
+      <div className="min-h-screen p-4 md:p-6 lg:p-8">
+        <div className="mx-auto max-w-7xl space-y-6">
         <div className="rounded-3xl border border-slate-200 dark:border-slate-800/60 bg-gradient-to-br from-sky-500 to-sky-700 px-6 py-7 shadow-xl">
           <div>
             <p className="text-[11px] uppercase tracking-[0.28em] text-sky-100/90">Gestión Financiera</p>
@@ -123,19 +169,75 @@ export default function PaymentApproval() {
               <div className="rounded-md border">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>ID</TableHead>
-                      <TableHead>Estudiante</TableHead>
-                      <TableHead>N° Operación</TableHead>
-                      <TableHead>Agencia</TableHead>
-                      <TableHead>Monto</TableHead>
-                      <TableHead>Fecha Operación</TableHead>
-                      <TableHead>Estado</TableHead>
-                      <TableHead className="text-center">Acciones</TableHead>
+                    <TableRow className="bg-sky-50 dark:bg-sky-950/20">
+                      <TableHead>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 gap-1 font-semibold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300"
+                          onClick={() => handleSort('id')}
+                        >
+                          ID
+                          {sortColumn === 'id' ? (
+                            sortDirection === 'asc' ? <IconChevronUp className="h-3 w-3" /> : <IconChevronDown className="h-3 w-3" />
+                          ) : (
+                            <IconArrowsSort className="h-3 w-3 opacity-50" />
+                          )}
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 gap-1 font-semibold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300"
+                          onClick={() => handleSort('student_name')}
+                        >
+                          Estudiante
+                          {sortColumn === 'student_name' ? (
+                            sortDirection === 'asc' ? <IconChevronUp className="h-3 w-3" /> : <IconChevronDown className="h-3 w-3" />
+                          ) : (
+                            <IconArrowsSort className="h-3 w-3 opacity-50" />
+                          )}
+                        </Button>
+                      </TableHead>
+                      <TableHead className="font-semibold text-sky-700 dark:text-sky-400">N° Operación</TableHead>
+                      <TableHead className="font-semibold text-sky-700 dark:text-sky-400">Agencia</TableHead>
+                      <TableHead>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 gap-1 font-semibold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300"
+                          onClick={() => handleSort('amount')}
+                        >
+                          Monto
+                          {sortColumn === 'amount' ? (
+                            sortDirection === 'asc' ? <IconChevronUp className="h-3 w-3" /> : <IconChevronDown className="h-3 w-3" />
+                          ) : (
+                            <IconArrowsSort className="h-3 w-3 opacity-50" />
+                          )}
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 gap-1 font-semibold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300"
+                          onClick={() => handleSort('operation_date')}
+                        >
+                          Fecha Operación
+                          {sortColumn === 'operation_date' ? (
+                            sortDirection === 'asc' ? <IconChevronUp className="h-3 w-3" /> : <IconChevronDown className="h-3 w-3" />
+                          ) : (
+                            <IconArrowsSort className="h-3 w-3 opacity-50" />
+                          )}
+                        </Button>
+                      </TableHead>
+                      <TableHead className="font-semibold text-sky-700 dark:text-sky-400">Estado</TableHead>
+                      <TableHead className="text-center font-semibold text-sky-700 dark:text-sky-400">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {payments.map((p) => (
+                    {getSortedPayments().map((p) => (
                       <TableRow key={p.id}>
                         <TableCell className="font-semibold">#{p.id}</TableCell>
                         <TableCell>{p.student_name || 'Sin asignar'}</TableCell>
@@ -160,7 +262,16 @@ export default function PaymentApproval() {
           </CardContent>
         </Card>
 
-        <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
+        <Dialog
+          open={showEvidenceModal}
+          onOpenChange={(open) => {
+            setShowEvidenceModal(open);
+            if (!open) {
+              setSelectedPayment(null);
+              setEvidenceError(false);
+            }
+          }}
+        >
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Evidencia de Pago #{selectedPayment?.id}</DialogTitle>
@@ -189,16 +300,41 @@ export default function PaymentApproval() {
                 </div>
                 <div className="border rounded-lg p-4 bg-muted/20">
                   <p className="text-sm font-semibold mb-2">Evidencia:</p>
-                  <div className="flex justify-center bg-white dark:bg-slate-900 rounded-lg p-4">
-                    <img 
-                      src={`${config.apiUrl}/storage/${selectedPayment.evidence_path}`} 
-                      alt="Evidencia de pago"
-                      className="max-w-full h-auto rounded-lg shadow-lg"
-                      onError={(e) => {
-                        e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-size="18"%3ENo se pudo cargar la imagen%3C/text%3E%3C/svg%3E';
-                      }}
-                    />
-                  </div>
+                  {(() => {
+                    const evidenceUrl = resolveEvidenceUrl(selectedPayment.evidence_path);
+                    if (!evidenceUrl || evidenceError) {
+                      return (
+                        <div className="rounded-lg bg-white dark:bg-slate-900 p-6 text-center text-sm text-muted-foreground">
+                          {selectedPayment.evidence_path
+                            ? 'No se pudo mostrar el comprobante. Revisa que el archivo exista o que la URL sea pública.'
+                            : 'El estudiante no adjuntó un comprobante.'}
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="flex flex-col gap-3">
+                        <div className="flex justify-center bg-white dark:bg-slate-900 rounded-lg p-4">
+                          <img
+                            src={evidenceUrl}
+                            alt="Evidencia de pago"
+                            className="max-w-full h-auto rounded-lg shadow-lg"
+                            onError={() => setEvidenceError(true)}
+                          />
+                        </div>
+                        <div className="text-right">
+                          <a
+                            href={evidenceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-sky-600 hover:underline"
+                          >
+                            Abrir comprobante en una nueva pestaña
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
                 <div className="flex justify-end gap-3 pt-4">
                   <Button variant="outline" onClick={() => setShowEvidenceModal(false)}>
@@ -217,6 +353,7 @@ export default function PaymentApproval() {
             )}
           </DialogContent>
         </Dialog>
+        </div>
       </div>
     </AdministrativeLayout>
   );

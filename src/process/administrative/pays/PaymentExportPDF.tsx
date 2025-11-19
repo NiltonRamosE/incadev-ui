@@ -77,12 +77,7 @@ export default function PaymentExportPDF() {
     const statusMap: Record<string, string> = {
       'approved': 'Aprobado',
       'pending': 'Pendiente',
-      'rejected': 'Rechazado',
-      'paid': 'Pagado',
-      'failed': 'Fallido',
-      'cancelled': 'Cancelado',
-      'completed': 'Completado',
-      'partial': 'Parcial'
+      'rejected': 'Rechazado'
     };
     return statusMap[status] || status;
   };
@@ -114,7 +109,7 @@ export default function PaymentExportPDF() {
     let pendingCount = 0;
 
     payments.forEach((payment) => {
-      if (payment.status === 'approved' || payment.status === 'completed') {
+      if (payment.status === 'approved') {
         totalIncome += parseFloat(String(payment.amount));
         completedCount++;
       } else if (payment.status === 'pending') {
@@ -250,11 +245,11 @@ export default function PaymentExportPDF() {
                 </td>
                 <td className="p-2 border-b border-slate-200">
                   <span className={`inline-block px-2 py-0.5 rounded-xl text-[9px] font-semibold uppercase tracking-wide border ${
-                    payment.status === 'approved' || payment.status === 'paid' || payment.status === 'completed'
-                      ? 'bg-sky-100 text-sky-800 border-sky-300'
+                    payment.status === 'approved'
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                       : payment.status === 'pending'
-                      ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-                      : payment.status === 'failed' || payment.status === 'rejected'
+                      ? 'bg-amber-100 text-amber-800 border-amber-300'
+                      : payment.status === 'rejected'
                       ? 'bg-red-100 text-red-800 border-red-300'
                       : 'bg-slate-100 text-slate-700 border-slate-300'
                   }`}>

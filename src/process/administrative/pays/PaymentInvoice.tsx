@@ -91,13 +91,7 @@ export default function PaymentInvoice({ paymentId: propPaymentId }: PaymentInvo
     const statusMap: Record<string, string> = {
       'approved': 'Aprobado',
       'pending': 'Pendiente',
-      'rejected': 'Rechazado',
-      'paid': 'Pagado',
-      'PAID': 'Pagado',
-      'PENDING': 'Pendiente',
-      'OVERDUE': 'Vencido',
-      'CANCELLED': 'Cancelado',
-      'FAILED': 'Fallido'
+      'rejected': 'Rechazado'
     };
     return statusMap[status] || status;
   };
