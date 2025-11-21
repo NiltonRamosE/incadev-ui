@@ -27,6 +27,8 @@ export default function PaymentApproval() {
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [showEvidenceModal, setShowEvidenceModal] = useState(false);
   const [evidenceError, setEvidenceError] = useState(false);
+  const [evidenceUrl, setEvidenceUrl] = useState<string | null>(null);
+  const [checkingEvidence, setCheckingEvidence] = useState(false);
   const [sortColumn, setSortColumn] = useState<keyof Payment | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
@@ -126,19 +128,28 @@ export default function PaymentApproval() {
     return <Badge variant="outline" className={statusInfo.className}>{statusInfo.text}</Badge>;
   };
 
-  const openEvidenceModal = (payment: Payment) => {
+  const openEvidenceModal = async (payment: Payment) => {
     setSelectedPayment(payment);
     setShowEvidenceModal(true);
     setEvidenceError(false);
-  };
+    setEvidenceUrl(null);
+    setCheckingEvidence(true);
 
-  const resolveEvidenceUrl = (path?: string | null) => {
-    if (!path) return null;
-    const trimmed = path.trim();
-    if (!trimmed) return null;
-    return /^https?:\/\//i.test(trimmed)
-      ? trimmed
-      : `${config.apiUrl}/storage/${trimmed}`;
+    try {
+      const response = await fetch(`${config.apiUrl}/api/pagos/${payment.id}/check-evidence`);
+      const data = await response.json();
+
+      if (data.exists && data.url) {
+        setEvidenceUrl(data.url);
+      } else {
+        setEvidenceError(true);
+      }
+    } catch (error) {
+      console.error('Error al verificar evidencia:', error);
+      setEvidenceError(true);
+    } finally {
+      setCheckingEvidence(false);
+    }
   };
 
   return (
@@ -269,6 +280,8 @@ export default function PaymentApproval() {
             if (!open) {
               setSelectedPayment(null);
               setEvidenceError(false);
+              setEvidenceUrl(null);
+              setCheckingEvidence(false);
             }
           }}
         >
@@ -300,41 +313,40 @@ export default function PaymentApproval() {
                 </div>
                 <div className="border rounded-lg p-4 bg-muted/20">
                   <p className="text-sm font-semibold mb-2">Evidencia:</p>
-                  {(() => {
-                    const evidenceUrl = resolveEvidenceUrl(selectedPayment.evidence_path);
-                    if (!evidenceUrl || evidenceError) {
-                      return (
-                        <div className="rounded-lg bg-white dark:bg-slate-900 p-6 text-center text-sm text-muted-foreground">
-                          {selectedPayment.evidence_path
-                            ? 'No se pudo mostrar el comprobante. Revisa que el archivo exista o que la URL sea pública.'
-                            : 'El estudiante no adjuntó un comprobante.'}
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <div className="flex flex-col gap-3">
-                        <div className="flex justify-center bg-white dark:bg-slate-900 rounded-lg p-4">
-                          <img
-                            src={evidenceUrl}
-                            alt="Evidencia de pago"
-                            className="max-w-full h-auto rounded-lg shadow-lg"
-                            onError={() => setEvidenceError(true)}
-                          />
-                        </div>
-                        <div className="text-right">
-                          <a
-                            href={evidenceUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-sky-600 hover:underline"
-                          >
-                            Abrir comprobante en una nueva pestaña
-                          </a>
-                        </div>
+                  {checkingEvidence ? (
+                    <div className="rounded-lg bg-white dark:bg-slate-900 p-6 text-center text-sm text-muted-foreground">
+                      Verificando comprobante...
+                    </div>
+                  ) : !selectedPayment.evidence_path ? (
+                    <div className="rounded-lg bg-white dark:bg-slate-900 p-6 text-center text-sm text-muted-foreground">
+                      El estudiante no adjuntó un comprobante.
+                    </div>
+                  ) : evidenceError || !evidenceUrl ? (
+                    <div className="rounded-lg bg-white dark:bg-slate-900 p-6 text-center text-sm text-muted-foreground">
+                      No se pudo mostrar el comprobante. El archivo no existe o no es accesible.
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      <div className="flex justify-center bg-white dark:bg-slate-900 rounded-lg p-4">
+                        <img
+                          src={evidenceUrl}
+                          alt="Evidencia de pago"
+                          className="max-w-full h-auto rounded-lg shadow-lg"
+                          onError={() => setEvidenceError(true)}
+                        />
                       </div>
-                    );
-                  })()}
+                      <div className="text-right">
+                        <a
+                          href={evidenceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-sky-600 hover:underline"
+                        >
+                          Abrir comprobante en una nueva pestaña
+                        </a>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="flex justify-end gap-3 pt-4">
                   <Button variant="outline" onClick={() => setShowEvidenceModal(false)}>
