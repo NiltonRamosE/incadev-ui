@@ -54,7 +54,7 @@ export const adminNavItems: NavItem[] = [
     items: [
       { title: "Estudiantes", url: "/administrativo/gestion-academica/estudiantes" },
       { title: "Matrículas", url: "/administrativo/matriculas" },
-      { title: "Historial Académico", url: "/administrativo/historial" },
+      { title: "Historial Académico", url: "/administrativo/gestion-academica/historial-academico" },
     ],
   },
 
