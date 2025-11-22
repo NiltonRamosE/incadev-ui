@@ -8,8 +8,8 @@ import DashboardICV from "@/process/academic/dasboard/Dashboard";
 
 export const config = {
   //apiUrl:"https://instituto.cetivirgendelapuerta.com/administrativo/backend/public",
-  apiUrl: "http://127.0.0.1:8000",
-  environment: "development",
+  apiUrl:  "http://127.0.0.1:8000",
+  environment:  "development",
   endpoints: {
     //dashboard
     dashboard: "/api/dashboard/data",
@@ -43,5 +43,10 @@ export const config = {
     // Matrículas
     enrollments: "/api/gestion-academica/matriculas",
 
+    // Módulos
+    modulesCourses: "/api/academic-processes/courses",
+    modulesCourseVersion: "/api/academic-processes/course-version",
+    modules: "/api/academic-processes",
+    modulesReorder: "/api/academic-processes/reorder",
   },
 };
