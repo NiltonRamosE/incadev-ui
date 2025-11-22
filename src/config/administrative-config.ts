@@ -16,6 +16,10 @@ export const config = {
     dashboard: "/api/dashboard/data",
     export_pdf: "/api/dashboard/export-data",
 
+    //procesos academicos
+    assignTeacher: "/api/academic-processes/teacher-groups/assign",
+    removeTeacher: "/api/academic-processes/teacher-groups/remove",
+
     //pagos
     pagos: "/api/pagos",
     pagosExportCsv: "/api/pagos/export-csv",
