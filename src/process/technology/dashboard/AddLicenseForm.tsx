@@ -32,7 +32,7 @@ export default function AddLicenseForm({ open, onClose, softwareList, onCreate }
     status:""
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     
    const res = await fetch("http://localhost:8000/api/infrastructure/licenses", {
@@ -78,7 +78,7 @@ export default function AddLicenseForm({ open, onClose, softwareList, onCreate }
                 <SelectValue placeholder="Seleccione software" />
               </SelectTrigger>
               <SelectContent>
-                {softwareList.map((soft) => (
+                {softwareList.map((soft: { id: React.Key | null | undefined; software_name: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; version: any; }) => (
                   <SelectItem key={soft.id} value={String(soft.id)}>
                     {soft.software_name} {soft.version && `(${soft.version})`}
                   </SelectItem>
@@ -143,7 +143,7 @@ export default function AddLicenseForm({ open, onClose, softwareList, onCreate }
 
                     // Actualizar lista local
                     const data = await res.json();
-                    setSoftwareList((prev) => [...prev, data.data]);
+                    setSoftwareList((prev: any) => [...prev, data.data]);
 
                     // Seleccionar el nuevo software
                     setForm({
