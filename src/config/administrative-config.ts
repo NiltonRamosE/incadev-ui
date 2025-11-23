@@ -35,13 +35,20 @@ export const config = {
 
     // Historial Académico
     academicHistory: "/api/gestion-academica/historial-academico",
-    academicHistoryExportCsv: "/api/gestion-academica/historial-academico/exportar/csv",
-    academicHistoryExportData: "/api/gestion-academica/historial-academico/exportar/datos",
+    academicHistoryExportCsv:
+      "/api/gestion-academica/historial-academico/exportar/csv",
+    academicHistoryExportData:
+      "/api/gestion-academica/historial-academico/exportar/datos",
 
     // Módulos
     modulesCourses: "/api/academic-processes/courses",
     modulesCourseVersion: "/api/academic-processes/course-version",
     modules: "/api/academic-processes",
     modulesReorder: "/api/academic-processes/reorder",
+
+    // Grupos
+    groups: "/api/academic-processes/groups",
+    groupsCourseVersions: "/api/academic-processes/groups/course-versions",
+    groupsStatistics: "/api/academic-processes/groups/statistics",
   },
 };
