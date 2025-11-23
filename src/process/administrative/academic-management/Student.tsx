@@ -384,7 +384,7 @@ export default function StudentsManagement() {
       <div className="min-h-screen p-4 md:p-6 lg:p-8">
         <div className="mx-auto max-w-7xl space-y-6">
           {/* Header */}
-          <div className="rounded-3xl border border-slate-200 dark:border-slate-800/60 bg-gradient-to-br from-indigo-500 to-indigo-700 px-6 py-7 shadow-xl">
+          <div className="rounded-3xl border border-slate-200 dark:border-slate-800/60 bg-gradient-to-br from-sky-500 to-sky-700 px-6 py-7 shadow-xl">
             <div>
               <p className="text-[11px] uppercase tracking-[0.28em] text-indigo-100/90">
                 Gestión Académica
