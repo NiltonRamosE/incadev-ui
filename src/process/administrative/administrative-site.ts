@@ -77,7 +77,7 @@ export const adminNavItems: NavItem[] = [
       { title: "Módulos", url: "/administrativo/procesos-academicos/modules-course" },
 
       // Grupos
-      { title: "Grupos", url: "/administrativo/groups" },
+      { title: "Grupos", url: "/administrativo/procesos-academicos/grupos" },
       { title: "Docentes por Grupo", url: "/administrativo/procesos-academicos/group-teachers" },
 
       // Control académico
@@ -137,7 +137,7 @@ export const adminNavItems: NavItem[] = [
     url: "#",
     icon: IconFileText,
     items: [
-      { title: "Documentos Administrativos", url: "/administrativo/documents" },
+      { title: "Documentos Administrativos", url: "/administrativo/gestion-documentaria/documentos" },
     ],
   },
 ];

@@ -29,9 +29,17 @@ export const config = {
     balance_general: "/api/finanzas/balance-general",
 
     //estudiantes
-    students: "/api/gestion-academica/estudiantes",
-    studentsExportCsv: "/api/gestion-academica/estudiantes/export/csv",
-    studentsExportData: "/api/gestion-academica/estudiantes/export-data",
+
+    students:"/api/gestion-academica/estudiantes",
+    studentsExportCsv: '/api/gestion-academica/estudiantes/export/csv',
+    studentsExportData: '/api/gestion-academica/estudiantes/export-data',
+
+    //documentos administrativos
+    documents: "/api/gestion-documentaria/documentos",
+    documentsExportCsv: '/api/gestion-documentaria/documentos/export/csv',
+    documentsExportData: '/api/gestion-documentaria/documentos/export-data',
+    documentsDownload: '/api/gestion-documentaria/documentos',
+
 
     // Historial Académico
     academicHistory: "/api/gestion-academica/historial-academico",
@@ -48,6 +56,12 @@ export const config = {
     modulesCourseVersion: "/api/academic-processes/course-version",
     modules: "/api/academic-processes",
     modulesReorder: "/api/academic-processes/reorder",
+
+    // Grupos
+    groups: "/api/academic-processes/groups",
+    groupsCourseVersions: "/api/academic-processes/groups/course-versions",
+    groupsStatistics: "/api/academic-processes/groups/statistics",
+
 
     //Configuración Académica
     academicSettings: "/api/academic-processes/academic-settings",
