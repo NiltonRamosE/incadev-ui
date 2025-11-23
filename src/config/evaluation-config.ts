@@ -29,6 +29,7 @@ export const config = {
     reports: {
       pdf: "/api/reports/survey/:surveyId/pdf",
       excel: "/api/reports/survey/:surveyId/excel",
+      analysis: "/api/surveys/:surveyId/analysis",
     }
   },
 };
