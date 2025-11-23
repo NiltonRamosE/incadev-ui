@@ -476,15 +476,43 @@ export default function CourseVersionsManagement() {
       window.open(url, "_blank");
     } catch (error) {
       console.error("Error al exportar CSV:", error);
+      setErrorMessage("Error al exportar CSV");
+      setTimeout(() => setErrorMessage(null), 5000);
     }
   };
 
-  const exportPDF = () => {
+  const exportPDF = async () => {
     try {
       const url = `${config.apiUrl}${config.endpoints.courseVersions}/export/pdf`;
-      window.open(url, "_blank");
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al obtener datos para exportación");
+      }
+
+      const data = await response.json();
+
+      // Guardamos los datos en localStorage
+      localStorage.setItem("courseVersionsExportData", JSON.stringify(data));
+
+      // Abrimos la página de exportación PDF
+      window.open(
+        "/administrativo/procesos-academicos/export-versions",
+        "_blank"
+      );
+
+      setSuccessMessage("Generando reporte PDF...");
+      setTimeout(() => setSuccessMessage(null), 3000);
     } catch (error) {
       console.error("Error al exportar PDF:", error);
+      setErrorMessage("Error al exportar PDF");
+      setTimeout(() => setErrorMessage(null), 5000);
     }
   };
 
