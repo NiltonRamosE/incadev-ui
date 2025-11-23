@@ -72,6 +72,7 @@ export const config = {
       // Tickets
       tickets: {
         list: "/support/tickets",
+        myTickets: "/support/my-tickets",
         create: "/support/tickets",
         getById: "/support/tickets/:id",
         update: "/support/tickets/:id",

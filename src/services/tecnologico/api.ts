@@ -604,7 +604,7 @@ export const technologyApi = {
   support: {
     tickets: {
       /**
-       * Lista tickets con filtros y paginación
+       * Lista todos los tickets con filtros y paginación (admin/support)
        */
       list: async (params?: {
         page?: number;
@@ -627,6 +627,32 @@ export const technologyApi = {
         if (params?.sort_order) queryParams.sort_order = params.sort_order;
 
         return apiClient.get<any>(config.endpoints.support.tickets.list, queryParams);
+      },
+
+      /**
+       * Lista mis tickets (del usuario autenticado) con filtros y paginación
+       */
+      myTickets: async (params?: {
+        page?: number;
+        per_page?: number;
+        status?: string;
+        priority?: string;
+        type?: string;
+        search?: string;
+        sort_by?: string;
+        sort_order?: string;
+      }): Promise<any> => {
+        const queryParams: Record<string, string | number> = {};
+        if (params?.page) queryParams.page = params.page;
+        if (params?.per_page) queryParams.per_page = params.per_page;
+        if (params?.status) queryParams.status = params.status;
+        if (params?.priority) queryParams.priority = params.priority;
+        if (params?.type) queryParams.type = params.type;
+        if (params?.search) queryParams.search = params.search;
+        if (params?.sort_by) queryParams.sort_by = params.sort_by;
+        if (params?.sort_order) queryParams.sort_order = params.sort_order;
+
+        return apiClient.get<any>(config.endpoints.support.tickets.myTickets, queryParams);
       },
 
       /**

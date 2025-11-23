@@ -38,7 +38,7 @@ import {
   TicketTypeColors as TypeColors,
 } from "@/types/support"
 
-export default function TicketsPage() {
+export default function MyTicketsPage() {
   const { user, loading: authLoading } = useTechnologyAuth()
 
   // State
@@ -55,7 +55,7 @@ export default function TicketsPage() {
   const [typeFilter, setTypeFilter] = useState<string>("")
   const [showFilters, setShowFilters] = useState(false)
 
-  // Fetch tickets
+  // Fetch mis tickets
   const fetchTickets = async () => {
     setLoading(true)
     try {
@@ -71,17 +71,17 @@ export default function TicketsPage() {
       if (priorityFilter) params.priority = priorityFilter
       if (typeFilter) params.type = typeFilter
 
-      const response = await technologyApi.support.tickets.list(params)
+      const response = await technologyApi.support.tickets.myTickets(params)
 
       if (response.status === "success" && response.data) {
         setTickets(response.data.tickets || [])
         setTotalPages(response.data.pagination?.total_pages || 1)
       } else {
-        toast.error("Error al cargar tickets")
+        toast.error("Error al cargar tus tickets")
       }
     } catch (error: any) {
-      console.error("Error fetching tickets:", error)
-      toast.error(error.message || "Error al cargar tickets")
+      console.error("Error fetching my tickets:", error)
+      toast.error(error.message || "Error al cargar tus tickets")
     } finally {
       setLoading(false)
     }
@@ -128,7 +128,7 @@ export default function TicketsPage() {
 
   if (authLoading) {
     return (
-      <TechnologyLayout title="Todos los Tickets">
+      <TechnologyLayout title="Mis Tickets">
         <div className="flex items-center justify-center h-96">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
@@ -137,14 +137,14 @@ export default function TicketsPage() {
   }
 
   return (
-    <TechnologyLayout title="Todos los Tickets">
+    <TechnologyLayout title="Mis Tickets">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Todos los Tickets</h1>
+            <h1 className="text-3xl font-bold text-foreground">Mis Tickets</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Gestiona todos los tickets de soporte técnico del sistema
+              Gestiona tus solicitudes de soporte técnico
             </p>
           </div>
           <Button onClick={handleCreateTicket}>
@@ -248,10 +248,10 @@ export default function TicketsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TicketIcon className="w-5 h-5" />
-              Todos los Tickets
+              Mis Tickets
             </CardTitle>
             <CardDescription>
-              Total: {tickets.length} ticket(s) {statusFilter ? `en estado ${StatusLabels[statusFilter as TicketStatus]}` : ""}
+              Tienes {tickets.length} ticket(s) {statusFilter ? `en estado ${StatusLabels[statusFilter as TicketStatus]}` : ""}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -262,7 +262,7 @@ export default function TicketsPage() {
             ) : tickets.length === 0 ? (
               <div className="text-center py-12">
                 <TicketIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground font-medium">No hay tickets disponibles</p>
+                <p className="text-muted-foreground font-medium">No tienes tickets creados</p>
                 <p className="text-sm text-muted-foreground/70 mt-1">
                   Crea tu primer ticket para empezar
                 </p>

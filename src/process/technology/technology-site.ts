@@ -50,6 +50,7 @@ export const routes = {
   support: {
     dashboard: "/tecnologico/support/dashboard",
     tickets: "/tecnologico/support/tickets",
+    myTickets: "/tecnologico/support/mis-tickets",
     createTicket: "/tecnologico/support/tickets/crear",
     ticketDetail: (id: number) => `/tecnologico/support/tickets/${id}`,
     profile: "/tecnologico/support/perfil",
