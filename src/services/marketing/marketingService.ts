@@ -3,6 +3,7 @@ import { config } from '../../config/academic-config'; // ← Cambiado de techno
 import { authenticatedFetch } from './authService';
 import { config as marketingConfig } from '../../config/marketing-config';
 
+
 export interface StudentProfile {
   id: number;
   user_id: string;
@@ -94,7 +95,7 @@ function mapStudentToUI(student: StudentFromAPI): StudentForUI {
   const diasDesdeRegistro = Math.floor(
     (new Date().getTime() - new Date(student.created_at).getTime()) / (1000 * 60 * 60 * 24)
   );
-
+  
   let estado: StudentForUI['estado'] = 'lead';
   if (diasDesdeRegistro > 60) {
     estado = Math.random() > 0.5 ? 'graduado' : 'cursando';
@@ -112,7 +113,7 @@ function mapStudentToUI(student: StudentFromAPI): StudentForUI {
   const tieneObjetivo = !!student.student_profile?.learning_goal;
   const tieneAvatar = !!student.avatar;
   const tieneTelefono = !!student.phone;
-
+  
   const engagementScore = Math.round(
     (tieneIntereses ? 40 : 0) +
     (tieneObjetivo ? 30 : 0) +
@@ -159,27 +160,92 @@ export async function fetchStudents(): Promise<StudentForUI[]> {
   try {
     // Construir URL correctamente desde academic-config
     const url = `${config.apiUrl}${config.endpoints.marketing.students}`;
-
+    
     console.log('[marketingService] Fetching students from:', url);
-
+    
     // Usar authenticatedFetch con Bearer token
     const response = await authenticatedFetch(url);
-
+    
     if (!response.ok) {
       throw new Error(`Error fetching students: ${response.statusText}`);
     }
 
     const data = await response.json();
     console.log('[marketingService] Students response:', data);
-
+    
     // La API devuelve { data: [...], meta: {...} }
     const students: StudentFromAPI[] = data.data || [];
-
+    
     return students.map(mapStudentToUI);
   } catch (error) {
     console.error('[marketingService] Error fetching students:', error);
-
+    
     // Si el error es de autenticación, redirigir al login
+    if (error instanceof Error && error.message.includes('login')) {
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/marketing';
+      }
+    }
+    
+    return [];
+  }
+}
+
+/**
+ * Mapea los datos de curso de la API a la estructura que necesita la UI
+ */
+function mapCourseToUI(course: CourseFromAPI): CourseForUI {
+  return {
+    id: course.id,
+    nombre: course.name,
+    descripcion: course.description || 'Sin descripción',
+    fechaCreacion: course.created_at,
+    fechaActualizacion: course.updated_at
+  };
+}
+
+/**
+ * Mapea los datos de versión de curso de la API a la estructura que necesita la UI
+ */
+function mapVersionToUI(version: CourseVersionFromAPI): CourseVersionForUI {
+  return {
+    id: version.id,
+    cursoId: version.course_id,
+    cursoNombre: version.course?.name || 'Curso desconocido',
+    cursoDescripcion: version.course?.description || 'Sin descripción',
+    nombre: version.name,
+    version: version.version || '',
+    precio: parseFloat(version.price) || 0,
+    estado: version.status,
+    fechaCreacion: version.created_at,
+    fechaActualizacion: version.updated_at
+  };
+}
+
+/**
+ * Obtiene la lista de cursos desde la API (CON AUTENTICACIÓN)
+ */
+export async function fetchCourses(): Promise<CourseForUI[]> {
+  try {
+    const url = `${config.apiUrl}${config.endpoints.marketing.courses}`;
+
+    console.log('[marketingService] Fetching courses from:', url);
+
+    const response = await authenticatedFetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Error fetching courses: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('[marketingService] Courses response:', data);
+
+    const courses: CourseFromAPI[] = data.data || [];
+
+    return courses.map(mapCourseToUI);
+  } catch (error) {
+    console.error('[marketingService] Error fetching courses:', error);
+
     if (error instanceof Error && error.message.includes('login')) {
       if (typeof window !== 'undefined') {
         window.location.href = '/auth/marketing';
@@ -190,7 +256,41 @@ export async function fetchStudents(): Promise<StudentForUI[]> {
   }
 }
 
-// ============================================ 
+/**
+ * Obtiene la lista de versiones de cursos desde la API (CON AUTENTICACIÓN)
+ */
+export async function fetchVersions(): Promise<CourseVersionForUI[]> {
+  try {
+    const url = `${config.apiUrl}${config.endpoints.marketing.versions}`;
+
+    console.log('[marketingService] Fetching versions from:', url);
+
+    const response = await authenticatedFetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Error fetching versions: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('[marketingService] Versions response:', data);
+
+    const versions: CourseVersionFromAPI[] = data.data || [];
+
+    return versions.map(mapVersionToUI);
+  } catch (error) {
+    console.error('[marketingService] Error fetching versions:', error);
+
+    if (error instanceof Error && error.message.includes('login')) {
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/marketing';
+      }
+    }
+    return [];
+  }
+}
+
+
+// ============================================
 // PROPOSALS TYPES & INTERFACES
 // ============================================
 
@@ -299,45 +399,6 @@ export async function fetchProposalById(id: number): Promise<ProposalForUI> {
       : `${marketingConfig.apiUrl}/api${endpoint}`;
 
     console.log('[marketingService] Fetching proposal by ID:', url);
-/**
- * Mapea los datos de curso de la API a la estructura que necesita la UI
- */
-function mapCourseToUI(course: CourseFromAPI): CourseForUI {
-  return {
-    id: course.id,
-    nombre: course.name,
-    descripcion: course.description || 'Sin descripción',
-    fechaCreacion: course.created_at,
-    fechaActualizacion: course.updated_at
-  };
-}
-
-/**
- * Mapea los datos de versión de curso de la API a la estructura que necesita la UI
- */
-function mapVersionToUI(version: CourseVersionFromAPI): CourseVersionForUI {
-  return {
-    id: version.id,
-    cursoId: version.course_id,
-    cursoNombre: version.course?.name || 'Curso desconocido',
-    cursoDescripcion: version.course?.description || 'Sin descripción',
-    nombre: version.name,
-    version: version.version || '',
-    precio: parseFloat(version.price) || 0,
-    estado: version.status,
-    fechaCreacion: version.created_at,
-    fechaActualizacion: version.updated_at
-  };
-}
-
-/**
- * Obtiene la lista de cursos desde la API (CON AUTENTICACIÓN)
- */
-export async function fetchCourses(): Promise<CourseForUI[]> {
-  try {
-    const url = `${config.apiUrl}${config.endpoints.marketing.courses}`;
-
-    console.log('[marketingService] Fetching courses from:', url);
 
     const response = await authenticatedFetch(url);
 
@@ -439,57 +500,5 @@ export async function deleteProposal(id: number): Promise<void> {
   } catch (error) {
     console.error('[marketingService] Error deleting proposal:', error);
     throw error;
-      throw new Error(`Error fetching courses: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log('[marketingService] Courses response:', data);
-
-    const courses: CourseFromAPI[] = data.data || [];
-
-    return courses.map(mapCourseToUI);
-  } catch (error) {
-    console.error('[marketingService] Error fetching courses:', error);
-
-    if (error instanceof Error && error.message.includes('login')) {
-      if (typeof window !== 'undefined') {
-        window.location.href = '/auth/marketing';
-      }
-    }
-
-    return [];
-  }
-}
-
-/**
- * Obtiene la lista de versiones de cursos desde la API (CON AUTENTICACIÓN)
- */
-export async function fetchVersions(): Promise<CourseVersionForUI[]> {
-  try {
-    const url = `${config.apiUrl}${config.endpoints.marketing.versions}`;
-
-    console.log('[marketingService] Fetching versions from:', url);
-
-    const response = await authenticatedFetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Error fetching versions: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log('[marketingService] Versions response:', data);
-
-    const versions: CourseVersionFromAPI[] = data.data || [];
-
-    return versions.map(mapVersionToUI);
-  } catch (error) {
-    console.error('[marketingService] Error fetching versions:', error);
-
-    if (error instanceof Error && error.message.includes('login')) {
-      if (typeof window !== 'undefined') {
-        window.location.href = '/auth/marketing';
-      }
-    }
-    return [];
   }
 }
