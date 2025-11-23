@@ -19,12 +19,13 @@ export const config = {
 
     // Campaigns
     campaigns: {
-      list: "/campaigns",
-      create: "/campaigns",
-      detail: "/campaigns/:id",
-      update: "/campaigns/:id",
-      delete: "/campaigns/:id",
-      stats: "/campaigns/:id/stats",
+      list: "/campaigns",              // GET con ?proposal_id=X
+      create: "/campaigns",            // POST
+      detail: "/campaigns/:id",        // GET
+      update: "/campaigns/:id",        // PUT
+      delete: "/campaigns/:id",        // DELETE
+      metrics: "/campaigns/:id/metrics", // GET
+      posts: "/campaigns/:id/posts",   // GET
     },
 
     // Chatbot

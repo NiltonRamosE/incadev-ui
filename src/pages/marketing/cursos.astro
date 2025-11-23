@@ -12,7 +12,8 @@ import Layout from "../../layouts/MarketingLayout.astro";
           Gestión de Cursos
         </h1>
         <p class="text-gray-600 dark:text-gray-400">
-          Administra versiones de cursos y gestiona campañas de captación de alumnos
+          Administra versiones de cursos y gestiona campañas de captación de
+          alumnos
         </p>
       </div>
 
@@ -39,27 +40,48 @@ import Layout from "../../layouts/MarketingLayout.astro";
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="p-4 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg">
+      <div
+        class="p-4 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg"
+      >
         <div class="text-center">
-          <p id="publicados" class="text-2xl font-bold text-green-600 dark:text-green-400">-</p>
+          <p
+            id="publicados"
+            class="text-2xl font-bold text-green-600 dark:text-green-400"
+          >
+            -
+          </p>
           <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
             Publicados
           </p>
         </div>
       </div>
 
-      <div class="p-4 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg">
+      <div
+        class="p-4 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg"
+      >
         <div class="text-center">
-          <p id="borradores" class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">-</p>
+          <p
+            id="borradores"
+            class="text-2xl font-bold text-yellow-600 dark:text-yellow-400"
+          >
+            -
+          </p>
           <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
             Borradores
           </p>
         </div>
       </div>
 
-      <div class="p-4 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg">
+      <div
+        class="p-4 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg"
+      >
         <div class="text-center">
-          <p id="archivados" class="text-2xl font-bold text-gray-500 dark:text-gray-400">-</p>
+          <p
+            id="archivados"
+            class="text-2xl font-bold text-gray-500 dark:text-gray-400"
+          >
+            -
+          </p>
           <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
             Archivados
           </p>
@@ -130,12 +152,18 @@ import Layout from "../../layouts/MarketingLayout.astro";
 
     <!-- Loading State -->
     <div id="loadingState" class="text-center py-12">
-      <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <div
+        class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+      >
+      </div>
       <p class="text-gray-600 dark:text-gray-400">Cargando cursos...</p>
     </div>
 
     <!-- Cursos List -->
-    <div id="cursosList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden">
+    <div
+      id="cursosList"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden"
+    >
       <!-- Los cursos se cargarán aquí dinámicamente -->
     </div>
 
@@ -201,33 +229,36 @@ import Layout from "../../layouts/MarketingLayout.astro";
   </div>
 
   <script>
-    import { fetchVersions, type CourseVersionForUI } from '../../services/marketing/marketingService';
+    import {
+      fetchVersions,
+      type CourseVersionForUI,
+    } from "../../services/marketing";
 
     let versiones: CourseVersionForUI[] = [];
-    let filtroEstado: string = 'todos';
+    let filtroEstado: string = "todos";
 
     // ============================================
     // CONFIG DE ESTADOS
     // ============================================
     const estadoConfig = {
       draft: {
-        label: 'Borrador',
-        bg: 'bg-yellow-50 dark:bg-yellow-950/30',
-        text: 'text-yellow-700 dark:text-yellow-400',
-        border: 'border-yellow-200 dark:border-yellow-900/50'
+        label: "Borrador",
+        bg: "bg-yellow-50 dark:bg-yellow-950/30",
+        text: "text-yellow-700 dark:text-yellow-400",
+        border: "border-yellow-200 dark:border-yellow-900/50",
       },
       published: {
-        label: 'Publicado',
-        bg: 'bg-green-50 dark:bg-green-950/30',
-        text: 'text-green-700 dark:text-green-400',
-        border: 'border-green-200 dark:border-green-900/50'
+        label: "Publicado",
+        bg: "bg-green-50 dark:bg-green-950/30",
+        text: "text-green-700 dark:text-green-400",
+        border: "border-green-200 dark:border-green-900/50",
       },
       archived: {
-        label: 'Archivado',
-        bg: 'bg-gray-100 dark:bg-gray-800',
-        text: 'text-gray-700 dark:text-gray-400',
-        border: 'border-gray-300 dark:border-gray-700'
-      }
+        label: "Archivado",
+        bg: "bg-gray-100 dark:bg-gray-800",
+        text: "text-gray-700 dark:text-gray-400",
+        border: "border-gray-300 dark:border-gray-700",
+      },
     };
 
     // ============================================
@@ -237,7 +268,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
       return new Date(dateString).toLocaleDateString("es-ES", {
         day: "numeric",
         month: "short",
-        year: "numeric"
+        year: "numeric",
       });
     }
 
@@ -251,13 +282,19 @@ import Layout from "../../layouts/MarketingLayout.astro";
       const archivadosEl = document.getElementById("archivados");
 
       if (publicadosEl) {
-        publicadosEl.textContent = versiones.filter(v => v.estado === 'published').length.toString();
+        publicadosEl.textContent = versiones
+          .filter((v) => v.estado === "published")
+          .length.toString();
       }
       if (borradoresEl) {
-        borradoresEl.textContent = versiones.filter(v => v.estado === 'draft').length.toString();
+        borradoresEl.textContent = versiones
+          .filter((v) => v.estado === "draft")
+          .length.toString();
       }
       if (archivadosEl) {
-        archivadosEl.textContent = versiones.filter(v => v.estado === 'archived').length.toString();
+        archivadosEl.textContent = versiones
+          .filter((v) => v.estado === "archived")
+          .length.toString();
       }
     }
 
@@ -265,9 +302,11 @@ import Layout from "../../layouts/MarketingLayout.astro";
       document.querySelectorAll(".filter-btn").forEach((btn) => {
         const filter = btn.getAttribute("data-filter");
         if (filter === filtroEstado) {
-          btn.className = "filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-blue-600 text-white";
+          btn.className =
+            "filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-blue-600 text-white";
         } else {
-          btn.className = "filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900";
+          btn.className =
+            "filter-btn px-4 py-2 rounded-lg font-medium transition-colors bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900";
         }
       });
     }
@@ -283,15 +322,16 @@ import Layout from "../../layouts/MarketingLayout.astro";
       let filtered = versiones;
 
       // Filtro por estado
-      if (filtroEstado !== 'todos') {
+      if (filtroEstado !== "todos") {
         filtered = filtered.filter((v) => v.estado === filtroEstado);
       }
 
       // Filtro por búsqueda
       if (busqueda) {
-        filtered = filtered.filter((v) =>
-          v.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-          v.cursoNombre.toLowerCase().includes(busqueda.toLowerCase())
+        filtered = filtered.filter(
+          (v) =>
+            v.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+            v.cursoNombre.toLowerCase().includes(busqueda.toLowerCase()),
         );
       }
 
@@ -328,7 +368,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
             <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg mb-4">
               <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Versión del curso</p>
               <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                ${v.nombre} ${v.version ? `(${v.version})` : ''}
+                ${v.nombre} ${v.version ? `(${v.version})` : ""}
               </p>
             </div>
 
@@ -379,7 +419,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
           renderCursos();
         }
       } catch (error) {
-        console.error('[cursos.astro] Error loading courses:', error);
+        console.error("[cursos.astro] Error loading courses:", error);
         loadingState?.classList.add("hidden");
         errorState?.classList.remove("hidden");
       }
@@ -398,7 +438,9 @@ import Layout from "../../layouts/MarketingLayout.astro";
         btn.addEventListener("click", () => {
           filtroEstado = btn.getAttribute("data-filter") || "todos";
           updateFilterButtons();
-          const searchInput = document.getElementById("searchInput") as HTMLInputElement;
+          const searchInput = document.getElementById(
+            "searchInput",
+          ) as HTMLInputElement;
           renderCursos(searchInput?.value || "");
         });
       });
@@ -413,8 +455,8 @@ import Layout from "../../layouts/MarketingLayout.astro";
       // Limpiar filtros
       const btnLimpiarFiltros = document.getElementById("btnLimpiarFiltros");
       btnLimpiarFiltros?.addEventListener("click", () => {
-        if (searchInput) (searchInput as HTMLInputElement).value = '';
-        filtroEstado = 'todos';
+        if (searchInput) (searchInput as HTMLInputElement).value = "";
+        filtroEstado = "todos";
         updateFilterButtons();
         renderCursos();
       });

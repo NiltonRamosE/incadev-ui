@@ -534,7 +534,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
       deleteProposal,
       type ProposalForUI,
       type CreateProposalDTO,
-    } from "../../services/marketing/marketingService";
+    } from "../../services/marketing";
 
     // ============================================
     // CONFIGURACIÓN DE ESTADOS
@@ -671,80 +671,83 @@ import Layout from "../../layouts/MarketingLayout.astro";
           const prioridadClass = prioridadColor[p.prioridad];
 
           return `
-          <div class="p-6 bg-white dark:bg-gray-950 border-l-4 ${prioridadClass} border-y border-r border-gray-200 dark:border-gray-800 rounded-lg hover:shadow-lg smooth-transition group">
-            
-            <!-- Header -->
-            <div class="flex items-start justify-between mb-4">
-              <div class="flex-1">
-                <div class="flex items-center gap-2 mb-2">
-                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 smooth-transition">
-                    ${p.tema}
-                  </h3>
-                  <span class="px-2 py-0.5 bg-${p.prioridad === "alta" ? "red" : p.prioridad === "media" ? "yellow" : "green"}-100 dark:bg-${p.prioridad === "alta" ? "red" : p.prioridad === "media" ? "yellow" : "green"}-900/30 text-${p.prioridad === "alta" ? "red" : p.prioridad === "media" ? "yellow" : "green"}-700 dark:text-${p.prioridad === "alta" ? "red" : p.prioridad === "media" ? "yellow" : "green"}-400 rounded-full text-xs font-medium">
-                    ${p.prioridad === "alta" ? "🔴" : p.prioridad === "media" ? "🟡" : "🟢"} ${p.prioridad.charAt(0).toUpperCase() + p.prioridad.slice(1)}
-                  </span>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  ${p.descripcion}
-                </p>
-              </div>
-              <span class="px-3 py-1.5 ${estado.bg} ${estado.text} border ${estado.border} rounded-full text-xs font-medium whitespace-nowrap ml-4">
-                ${estado.icon} ${estado.label}
-              </span>
-            </div>
+  <a 
+    href="/marketing/propuestas/${p.id}"
+    class="block p-6 bg-white dark:bg-gray-950 border-l-4 ${prioridadClass} border-y border-r border-gray-200 dark:border-gray-800 rounded-lg hover:shadow-lg smooth-transition group cursor-pointer"
+  >
+    
+    <!-- Header -->
+    <div class="flex items-start justify-between mb-4">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-2">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 smooth-transition">
+            ${p.tema}
+          </h3>
+          <span class="px-2 py-0.5 bg-${p.prioridad === "alta" ? "red" : p.prioridad === "media" ? "yellow" : "green"}-100 dark:bg-${p.prioridad === "alta" ? "red" : p.prioridad === "media" ? "yellow" : "green"}-900/30 text-${p.prioridad === "alta" ? "red" : p.prioridad === "media" ? "yellow" : "green"}-700 dark:text-${p.prioridad === "alta" ? "red" : p.prioridad === "media" ? "yellow" : "green"}-400 rounded-full text-xs font-medium">
+            ${p.prioridad === "alta" ? "🔴" : p.prioridad === "media" ? "🟡" : "🟢"} ${p.prioridad.charAt(0).toUpperCase() + p.prioridad.slice(1)}
+          </span>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          ${p.descripcion}
+        </p>
+      </div>
+      <span class="px-3 py-1.5 ${estado.bg} ${estado.text} border ${estado.border} rounded-full text-xs font-medium whitespace-nowrap ml-4">
+        ${estado.icon} ${estado.label}
+      </span>
+    </div>
 
-            <!-- Público Tags -->
-            ${
-              p.publico.length > 0
-                ? `
-              <div class="flex flex-wrap gap-2 mb-4">
-                ${p.publico
-                  .map(
-                    (pub) => `
-                  <span class="px-2 py-1 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 text-xs rounded-full">
-                    👥 ${pub}
-                  </span>
-                `,
-                  )
-                  .join("")}
-              </div>
-            `
-                : ""
-            }
+    <!-- Público Tags -->
+    ${
+      p.publico.length > 0
+        ? `
+      <div class="flex flex-wrap gap-2 mb-4">
+        ${p.publico
+          .map(
+            (pub) => `
+          <span class="px-2 py-1 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 text-xs rounded-full">
+            👥 ${pub}
+          </span>
+        `,
+          )
+          .join("")}
+      </div>
+    `
+        : ""
+    }
 
-            <!-- Footer Info -->
-            <div class="flex flex-wrap items-center justify-between gap-4 text-sm text-gray-600 dark:text-gray-400 pt-3 border-t border-gray-200 dark:border-gray-800">
-              <div class="flex items-center gap-4">
-                <span class="flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                  ${p.departamento}
-                </span>
-                <span class="flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  ${new Date(p.fecha).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
-                </span>
-              </div>
-              <div class="flex items-center gap-2">
-                <button 
-                  onclick="editarPropuesta(${p.id})"
-                  class="px-3 py-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg smooth-transition text-xs font-medium"
-                >
-                  Editar
-                </button>
-                <button 
-                  onclick="eliminarPropuesta(${p.id})"
-                  class="px-3 py-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg smooth-transition text-xs font-medium"
-                >
-                  Eliminar
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
+    <!-- Footer Info -->
+    <div class="flex flex-wrap items-center justify-between gap-4 text-sm text-gray-600 dark:text-gray-400 pt-3 border-t border-gray-200 dark:border-gray-800">
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          ${p.departamento}
+        </span>
+        <span class="flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          ${new Date(p.fecha).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span 
+          onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/marketing/propuestas/${p.id}'"
+          class="px-3 py-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg smooth-transition text-xs font-medium cursor-pointer"
+        >
+          Ver Detalles
+        </span>
+        <button 
+          onclick="event.preventDefault(); event.stopPropagation(); eliminarPropuesta(${p.id})"
+          class="px-3 py-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg smooth-transition text-xs font-medium"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </a>
+`;
         })
         .join("");
     }
