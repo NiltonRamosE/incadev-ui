@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useTechnologyAuth } from "@/process/technology/hooks/useTechnologyAuth";
 import { AppSidebar } from "./components/app-sidebar";
 import { SiteHeader } from "./components/site-header";
@@ -12,9 +9,12 @@ interface TechnologyLayoutProps {
   title?: string;
 }
 
-export default function StrategicLayout({ children, title = "Dashboard: Procesos Tecnológicos" }: TechnologyLayoutProps) {
+export default function StrategicLayout({
+  children,
+  title = "Dashboard: Procesos Tecnológicos",
+}: TechnologyLayoutProps) {
   const { token, user, mounted, loading } = useTechnologyAuth();
-
+  /*
   if (!mounted || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
@@ -22,7 +22,7 @@ export default function StrategicLayout({ children, title = "Dashboard: Procesos
       </div>
     );
   }
-
+*/
   return (
     <SidebarProvider
       style={
@@ -32,11 +32,11 @@ export default function StrategicLayout({ children, title = "Dashboard: Procesos
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" token={token} user={user}/>
+      <AppSidebar variant="inset" token={token} user={user} />
       <SidebarInset>
-        <SiteHeader title={title}/>
+        <SiteHeader title={title} />
         {children}
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }
