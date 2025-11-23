@@ -68,5 +68,11 @@ export const config = {
 
     //cursos
     courses: '/api/academic-processes/courses-management',
+
+    //indicadores (KPIs)
+    kpis: "/api/indicadores",
+    kpisUpdateGoal: "/api/indicadores",
+    kpisRecalculate: "/api/indicadores/recalculate",
+    kpisExportData: "/api/indicadores/export-data",
   },
 };
