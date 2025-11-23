@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useAcademicAuth } from "@/process/academic/hooks/useAcademicAuth";
-import { config } from "@/config/evaluation-config";
+import { config as evaluationConfig } from "@/config/evaluation-config";
 import { Loader2 } from "lucide-react";
 
 interface SurveyQuestion {
@@ -37,6 +37,7 @@ interface APISurvey {
 interface SurveyFormProps {
   survey: APISurvey;
   groupId: string;
+  event: string;
   onClose: () => void;
   onSubmit: () => void;
 }
@@ -46,7 +47,7 @@ interface Answer {
   score: number;
 }
 
-export function SurveyForm({ survey, groupId, onClose, onSubmit }: SurveyFormProps) {
+export function SurveyForm({ survey, groupId, event, onClose, onSubmit }: SurveyFormProps) {
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
@@ -92,7 +93,7 @@ export function SurveyForm({ survey, groupId, onClose, onSubmit }: SurveyFormPro
       };
 
       const response = await fetch(
-        `${config.apiUrl}${config.endpoints.surveys.response.replace(':id', survey.id.toString())}`,
+        `${evaluationConfig.apiUrl}${evaluationConfig.endpoints.surveys.response.replace(':id', survey.id.toString())}`,
         {
           method: "POST",
           headers: {

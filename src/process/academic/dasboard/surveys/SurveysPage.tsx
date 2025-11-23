@@ -51,9 +51,15 @@ interface APIGroupData {
   progress?: number;
 }
 
+interface SurveyStatus {
+  hasResponded: boolean;
+  event: string;
+  group_id: number;
+}
+
 interface GroupWithSurveys {
   group: APIGroupData;
-  surveys: APISurvey[];
+  surveys: (APISurvey & { status: SurveyStatus })[];
 }
 
 const statusConfig = {
@@ -79,7 +85,7 @@ const statusConfig = {
 
 export default function SurveysPage() {
   const { token } = useAcademicAuth();
-  const [selectedSurvey, setSelectedSurvey] = useState<{survey: APISurvey, groupId: string} | null>(null);
+  const [selectedSurvey, setSelectedSurvey] = useState<{survey: APISurvey, groupId: string, event: string} | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [groupsWithSurveys, setGroupsWithSurveys] = useState<GroupWithSurveys[]>([]);
   const [loading, setLoading] = useState(true);
@@ -139,6 +145,38 @@ export default function SurveysPage() {
     }
   };
 
+  // Verificar estado de encuesta por grupo y evento
+  const checkSurveyStatus = async (groupId: string, event: string): Promise<SurveyStatus> => {
+    try {
+      const tokenWithoutQuotes = token?.replace(/^"|"$/g, '');
+      const response = await fetch(
+        `${evaluationConfig.apiUrl}${evaluationConfig.endpoints.surveys.active}?event=${event}&group_id=${groupId}`,
+        {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${tokenWithoutQuotes}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.data;
+    } catch (error) {
+      console.error(`Error verificando estado de encuesta ${event} para grupo ${groupId}:`, error);
+      // Si hay error, asumimos que no ha respondido
+      return {
+        hasResponded: false,
+        event,
+        group_id: parseInt(groupId)
+      };
+    }
+  };
+
   // Cargar datos
   useEffect(() => {
     const loadData = async () => {
@@ -151,11 +189,25 @@ export default function SurveysPage() {
           fetchSurveys()
         ]);
 
-        // Combinar grupos con sus encuestas (todas las encuestas aplican a todos los grupos)
-        const groupsWithSurveysData: GroupWithSurveys[] = groups.map(group => ({
-          group,
-          surveys: surveys // Todas las encuestas están disponibles para cada grupo
-        }));
+        // Combinar grupos con sus encuestas y verificar estado
+        const groupsWithSurveysData: GroupWithSurveys[] = await Promise.all(
+          groups.map(async (group) => {
+            const surveysWithStatus = await Promise.all(
+              surveys.map(async (survey) => {
+                const status = await checkSurveyStatus(group.id, survey.mapping.event);
+                return {
+                  ...survey,
+                  status
+                };
+              })
+            );
+
+            return {
+              group,
+              surveys: surveysWithStatus
+            };
+          })
+        );
 
         setGroupsWithSurveys(groupsWithSurveysData);
       } catch (error) {
@@ -171,10 +223,10 @@ export default function SurveysPage() {
     }
   }, [token]);
 
-  const handleSurveyClick = (survey: APISurvey, groupId: string) => {
-    // Aquí podrías verificar si ya fue completada
-    // Por ahora asumimos que todas están pendientes
-    setSelectedSurvey({ survey, groupId });
+  const handleSurveyClick = (survey: APISurvey, groupId: string, event: string, hasResponded: boolean) => {
+    if (hasResponded) return; // No hacer nada si ya respondió
+    
+    setSelectedSurvey({ survey, groupId, event });
     setIsDialogOpen(true);
   };
 
@@ -183,9 +235,33 @@ export default function SurveysPage() {
     setSelectedSurvey(null);
   };
 
-  const handleSurveySubmit = () => {
+  const handleSurveySubmit = async () => {
+    if (!selectedSurvey) return;
+
     // Actualizar el estado local para marcar como completada
-    // En una implementación real, esto se haría basado en la respuesta del API
+    setGroupsWithSurveys(prev => 
+      prev.map(groupData => {
+        if (groupData.group.id === selectedSurvey.groupId) {
+          return {
+            ...groupData,
+            surveys: groupData.surveys.map(survey => {
+              if (survey.mapping.event === selectedSurvey.event) {
+                return {
+                  ...survey,
+                  status: {
+                    ...survey.status,
+                    hasResponded: true
+                  }
+                };
+              }
+              return survey;
+            })
+          };
+        }
+        return groupData;
+      })
+    );
+
     handleCloseDialog();
   };
 
@@ -193,8 +269,16 @@ export default function SurveysPage() {
   const totalSurveys = groupsWithSurveys.reduce((total, groupData) => 
     total + groupData.surveys.length, 0
   );
-  const pendingSurveys = totalSurveys; // Por simplicidad, todas están pendientes
-  const completedSurveys = 0; // Podrías implementar lógica para trackear completadas
+  
+  const completedSurveys = groupsWithSurveys.reduce((total, groupData) => 
+    total + groupData.surveys.filter(s => s.status.hasResponded).length, 0
+  );
+  
+  const pendingSurveys = totalSurveys - completedSurveys;
+
+  const getSurveyStatus = (hasResponded: boolean) => {
+    return hasResponded ? "completed" : "pending";
+  };
 
   if (loading) {
     return (
@@ -287,16 +371,27 @@ export default function SurveysPage() {
                   {/* Surveys Grid */}
                   <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
                     {groupData.surveys.map((survey) => {
-                      const surveyStatus = "pending"; // Por defecto pendiente
+                      const surveyStatus = getSurveyStatus(survey.status.hasResponded);
                       const config = statusConfig[surveyStatus];
                       const StatusIcon = config.icon;
+                      const isCompleted = surveyStatus === "completed";
 
                       return (
                         <Card
                           key={`${groupData.group.id}-${survey.id}`}
-                          className="relative overflow-hidden transition-all hover:shadow-md cursor-pointer hover:border-primary"
-                          onClick={() => handleSurveyClick(survey, groupData.group.id)}
+                          className={`relative overflow-hidden transition-all ${
+                            isCompleted 
+                              ? "opacity-60 cursor-not-allowed" 
+                              : "cursor-pointer hover:shadow-md hover:border-primary"
+                          }`}
+                          onClick={() => !isCompleted && handleSurveyClick(survey, groupData.group.id, survey.mapping.event, survey.status.hasResponded)}
                         >
+                          {isCompleted && (
+                            <div className="absolute top-3 right-3">
+                              <Lock className="h-5 w-5 text-muted-foreground" />
+                            </div>
+                          )}
+                          
                           <CardHeader>
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1">
@@ -324,9 +419,16 @@ export default function SurveysPage() {
                                 <span className="text-xs capitalize">
                                   Tipo: {survey.mapping.event}
                                 </span>
-                                <Button size="sm" variant="default">
-                                  Iniciar
-                                </Button>
+                                {!isCompleted && (
+                                  <Button size="sm" variant="default">
+                                    Iniciar
+                                  </Button>
+                                )}
+                                {isCompleted && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    Completada
+                                  </Badge>
+                                )}
                               </div>
                             </div>
                           </CardContent>
@@ -352,6 +454,7 @@ export default function SurveysPage() {
             <SurveyForm 
               survey={selectedSurvey.survey}
               groupId={selectedSurvey.groupId}
+              event={selectedSurvey.event}
               onClose={handleCloseDialog}
               onSubmit={handleSurveySubmit}
             />
