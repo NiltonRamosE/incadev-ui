@@ -276,6 +276,11 @@ function EnrollmentDetailModal({
         className:
           "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
       },
+      cancelled: {
+        text: "🚫 Cancelado",
+        className:
+          "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
+      },
     };
     const info = statusMap[status] || statusMap.pending;
     return (
@@ -308,7 +313,7 @@ function EnrollmentDetailModal({
           "bg-violet-500/10 text-violet-700 dark:text-violet-400 border-violet-500/20",
       },
       failed: {
-        text: "❌ Reprobado",
+        text: "❌ Rechazado",
         className:
           "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
       },
@@ -894,7 +899,10 @@ export default function EnrollmentManagement() {
       localStorage.setItem("enrollmentsExportData", JSON.stringify(data));
 
       // Abrimos la página de exportación PDF
-      window.open("/administrativo/gestion-academica/enrollment-export-pdf", "_blank");
+      window.open(
+        "/administrativo/gestion-academica/enrollment-export-pdf",
+        "_blank"
+      );
     } catch (err) {
       console.error("Error al exportar PDF:", err);
       alert("Error al exportar el reporte PDF");
@@ -920,6 +928,11 @@ export default function EnrollmentManagement() {
       },
       overdue: {
         text: "❌ Vencido",
+        className:
+          "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
+      },
+      cancelled: {
+        text: "🚫 Cancelado",
         className:
           "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
       },
@@ -955,7 +968,7 @@ export default function EnrollmentManagement() {
           "bg-violet-500/10 text-violet-700 dark:text-violet-400 border-violet-500/20",
       },
       failed: {
-        text: "❌ Reprobado",
+        text: "❌ Rechazado",
         className:
           "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
       },
@@ -977,10 +990,10 @@ export default function EnrollmentManagement() {
       <div className="min-h-screen p-4 md:p-6 lg:p-8">
         <div className="mx-auto max-w-7xl space-y-6">
           {/* Header */}
-          <div className="rounded-3xl border border-slate-200 dark:border-slate-800/60 bg-gradient-to-br from-blue-500 to-blue-700 px-6 py-7 shadow-xl">
+          <div className="rounded-3xl border border-slate-200 dark:border-slate-800/60 bg-gradient-to-br from-sky-500 to-sky-700 px-6 py-7 shadow-xl">
             <div>
               <p className="text-[11px] uppercase tracking-[0.28em] text-blue-100/90">
-                ÁREA ADMINISTRATIVA
+                Gestión Académica
               </p>
               <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl">
                 Gestión de Matrículas
@@ -1130,25 +1143,25 @@ export default function EnrollmentManagement() {
                         <Table>
                           <TableHeader>
                             <TableRow className="bg-blue-50 dark:bg-blue-950/20">
-                              <TableHead className="font-semibold text-blue-700 dark:text-blue-400">
+                              <TableHead className="font-semibold text-blue-700 dark:text-blue-400 w-[200px]">
                                 Estudiante
                               </TableHead>
-                              <TableHead className="font-semibold text-blue-700 dark:text-blue-400">
+                              <TableHead className="font-semibold text-blue-700 dark:text-blue-400 w-[180px]">
                                 Curso / Grupo
                               </TableHead>
-                              <TableHead className="font-semibold text-blue-700 dark:text-blue-400">
-                                Fecha Matrícula
+                              <TableHead className="font-semibold text-blue-700 dark:text-blue-400 w-[110px]">
+                                Fecha
                               </TableHead>
-                              <TableHead className="text-right font-semibold text-blue-700 dark:text-blue-400">
+                              <TableHead className="text-right font-semibold text-blue-700 dark:text-blue-400 w-[100px]">
                                 Monto
                               </TableHead>
-                              <TableHead className="text-center font-semibold text-blue-700 dark:text-blue-400">
-                                Estado Pago
+                              <TableHead className="text-center font-semibold text-blue-700 dark:text-blue-400 w-[120px]">
+                                Pago
                               </TableHead>
-                              <TableHead className="text-center font-semibold text-blue-700 dark:text-blue-400">
-                                Estado Académico
+                              <TableHead className="text-center font-semibold text-blue-700 dark:text-blue-400 w-[120px]">
+                                Académico
                               </TableHead>
-                              <TableHead className="text-center font-semibold text-blue-700 dark:text-blue-400">
+                              <TableHead className="text-center font-semibold text-blue-700 dark:text-blue-400 w-[100px]">
                                 Acciones
                               </TableHead>
                             </TableRow>

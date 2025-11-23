@@ -249,7 +249,7 @@ export default function EnrollmentStatus() {
             },
             cancelled: {
                 text: 'Cancelado',
-                className: 'bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/20',
+                className: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',
                 icon: <IconX className="h-3 w-3" />
             },
             refunded: {
@@ -290,7 +290,7 @@ export default function EnrollmentStatus() {
                 icon: <IconCheck className="h-3 w-3" />
             },
             failed: {
-                text: 'Reprobado',
+                text: 'Rechazado',
                 className: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',
                 icon: <IconX className="h-3 w-3" />
             },
@@ -329,7 +329,7 @@ export default function EnrollmentStatus() {
                 icon: <IconCheck className="h-3 w-3" />
             },
             failed: {
-                text: 'Reprobado',
+                text: 'Rechazado',
                 className: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',
                 icon: <IconX className="h-3 w-3" />
             },
@@ -503,7 +503,7 @@ export default function EnrollmentStatus() {
                                                     checked={academicStatusFilter.includes('failed')}
                                                     onCheckedChange={() => toggleAcademicStatusFilter('failed')}
                                                 >
-                                                    Reprobado
+                                                    Rechazado
                                                 </DropdownMenuCheckboxItem>
                                                 {/* <DropdownMenuCheckboxItem
                                                     checked={academicStatusFilter.includes('dropped')}

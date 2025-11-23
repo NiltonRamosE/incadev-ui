@@ -66,6 +66,12 @@ export const config = {
     //Configuración Académica
     academicSettings: "/api/academic-processes/academic-settings",
 
+    //cursos
+    courses: '/api/academic-processes/courses-management',
+
+    //versiones de cursos
+    courseVersions: '/api/academic-processes/course-versions',
+
     //indicadores (KPIs)
     kpis: "/api/indicadores",
     kpisUpdateGoal: "/api/indicadores",

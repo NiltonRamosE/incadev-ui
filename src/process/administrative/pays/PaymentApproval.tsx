@@ -5,7 +5,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { IconCheck, IconX, IconEye, IconChevronDown, IconChevronUp, IconArrowsSort } from '@tabler/icons-react';
+import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { IconCheck, IconX, IconEye, IconChevronDown, IconChevronUp, IconArrowsSort, IconUser, IconSearch, IconFilter } from '@tabler/icons-react';
 import { config } from '@/config/administrative-config';
 
 interface Payment {
@@ -31,6 +40,7 @@ export default function PaymentApproval() {
   const [checkingEvidence, setCheckingEvidence] = useState(false);
   const [sortColumn, setSortColumn] = useState<keyof Payment | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     loadPendingPayments();
@@ -46,9 +56,21 @@ export default function PaymentApproval() {
   };
 
   const getSortedPayments = () => {
-    if (!sortColumn) return payments;
+    let filtered = [...payments];
 
-    return [...payments].sort((a, b) => {
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(p =>
+        p.operation_number.toLowerCase().includes(query) ||
+        (p.student_name && p.student_name.toLowerCase().includes(query)) ||
+        p.agency_number.toLowerCase().includes(query) ||
+        p.id.toString().includes(query)
+      );
+    }
+
+    if (!sortColumn) return filtered;
+
+    return filtered.sort((a, b) => {
       const aValue = a[sortColumn];
       const bValue = b[sortColumn];
 
@@ -158,7 +180,7 @@ export default function PaymentApproval() {
         <div className="mx-auto max-w-7xl space-y-6">
           <div className="rounded-3xl border border-slate-200 dark:border-slate-800/60 bg-gradient-to-br from-sky-500 to-sky-700 px-6 py-7 shadow-xl">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-sky-100/90">Gestión Financiera</p>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-sky-100/90">Pagos Académicos</p>
               <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl">Validar Pagos</h1>
               <p className="mt-2 max-w-xl text-sm text-sky-100/80">Revisa y aprueba los pagos pendientes de validación</p>
             </div>
@@ -166,8 +188,23 @@ export default function PaymentApproval() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Validación de Pagos</CardTitle>
-              <CardDescription>Lista de pagos pendientes registrados por estudiantes</CardDescription>
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <CardTitle>Validación de Pagos</CardTitle>
+                  <CardDescription>Lista de pagos pendientes registrados por estudiantes</CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="relative w-full md:w-64">
+                    <IconSearch className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar por estudiante o N° operación..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-8"
+                    />
+                  </div>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -176,98 +213,72 @@ export default function PaymentApproval() {
                 <div className="py-8 text-center text-sm text-red-600">Error: {error}</div>
               ) : payments.length === 0 ? (
                 <div className="py-12 text-center">No hay pagos pendientes por validar</div>
+              ) : getSortedPayments().length === 0 ? (
+                <div className="py-12 text-center text-muted-foreground">No se encontraron pagos con los filtros seleccionados</div>
               ) : (
-                <div className="hidden md:block rounded-md border">
-                  <Table className="table-fixed w-full [&_th]:whitespace-normal [&_td]:whitespace-normal [&_th]:px-4 [&_td]:px-4">
-                    <TableHeader>
-                      <TableRow className="bg-sky-50 dark:bg-sky-950/20">
-                        <TableHead className="w-20 text-center">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1 font-semibold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 w-full justify-center"
-                            onClick={() => handleSort('id')}
-                          >
-                            ID
-                            {sortColumn === 'id' ? (
-                              sortDirection === 'asc' ? <IconChevronUp className="h-3 w-3" /> : <IconChevronDown className="h-3 w-3" />
-                            ) : (
-                              <IconArrowsSort className="h-3 w-3 opacity-50" />
-                            )}
-                          </Button>
-                        </TableHead>
-                        <TableHead className="min-w-[180px] text-center">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1 font-semibold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 w-full justify-center"
-                            onClick={() => handleSort('student_name')}
-                          >
-                            Estudiante
-                            {sortColumn === 'student_name' ? (
-                              sortDirection === 'asc' ? <IconChevronUp className="h-3 w-3" /> : <IconChevronDown className="h-3 w-3" />
-                            ) : (
-                              <IconArrowsSort className="h-3 w-3 opacity-50" />
-                            )}
-                          </Button>
-                        </TableHead>
-                        <TableHead className="min-w-[140px] font-semibold text-sky-700 dark:text-sky-400 text-center">N° Op.</TableHead>
-                        <TableHead className="hidden md:table-cell min-w-[120px] font-semibold text-sky-700 dark:text-sky-400 text-center">Agencia</TableHead>
-                        <TableHead className="min-w-[120px] text-center">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1 font-semibold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 w-full justify-center"
-                            onClick={() => handleSort('amount')}
-                          >
-                            Monto
-                            {sortColumn === 'amount' ? (
-                              sortDirection === 'asc' ? <IconChevronUp className="h-3 w-3" /> : <IconChevronDown className="h-3 w-3" />
-                            ) : (
-                              <IconArrowsSort className="h-3 w-3 opacity-50" />
-                            )}
-                          </Button>
-                        </TableHead>
-                        <TableHead className="hidden lg:table-cell min-w-[130px] text-center">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 gap-1 font-semibold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 w-full justify-center"
-                            onClick={() => handleSort('operation_date')}
-                          >
-                            Fecha Op.
-                            {sortColumn === 'operation_date' ? (
-                              sortDirection === 'asc' ? <IconChevronUp className="h-3 w-3" /> : <IconChevronDown className="h-3 w-3" />
-                            ) : (
-                              <IconArrowsSort className="h-3 w-3 opacity-50" />
-                            )}
-                          </Button>
-                        </TableHead>
-                        <TableHead className="min-w-[130px] font-semibold text-sky-700 dark:text-sky-400 text-center">Estado</TableHead>
-                        <TableHead className="text-center min-w-[120px] font-semibold text-sky-700 dark:text-sky-400">Acciones</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {getSortedPayments().map((p) => (
-                        <TableRow key={p.id}>
-                          <TableCell className="font-semibold text-center">#{p.id}</TableCell>
-                          <TableCell className="text-center">{p.student_name || 'Sin asignar'}</TableCell>
-                          <TableCell className="text-muted-foreground text-center">{p.operation_number}</TableCell>
-                          <TableCell className="hidden md:table-cell text-muted-foreground text-center">{p.agency_number}</TableCell>
-                          <TableCell className="font-semibold text-sky-600 dark:text-sky-400 text-center">{formatCurrency(p.amount)}</TableCell>
-                          <TableCell className="hidden lg:table-cell text-muted-foreground text-center">{new Date(p.operation_date).toLocaleDateString()}</TableCell>
-                          <TableCell className="text-center">{getStatusBadge(p.status)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center justify-center gap-2">
-                              <Button size="sm" variant="outline" onClick={() => openEvidenceModal(p)} title="Ver evidencia">
-                                <IconEye className="h-4 w-4" />
-                              </Button>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {getSortedPayments().map((p) => (
+                    <Card key={p.id} className="group hover:shadow-lg transition-all duration-300 border-2 hover:border-sky-500/50">
+                      <CardContent className="p-5">
+                        <div className="space-y-4">
+
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-sky-500/10">
+                                <span className="text-sm font-bold text-sky-600 dark:text-sky-400">#{p.id}</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-muted-foreground">Pago ID</p>
+                                <p className="text-sm font-semibold">{p.operation_number}</p>
+                              </div>
                             </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                            {getStatusBadge(p.status)}
+                          </div>
+
+
+                          <div className="space-y-2 rounded-lg bg-slate-50 dark:bg-slate-900/50 p-3">
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-500/10">
+                                <IconUser className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs text-muted-foreground">Estudiante</p>
+                                <p className="text-sm font-medium truncate">{p.student_name || 'Sin asignar'}</p>
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1">
+                              <p className="text-xs text-muted-foreground">Monto</p>
+                              <p className="text-lg font-bold text-sky-600 dark:text-sky-400">{formatCurrency(p.amount)}</p>
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-xs text-muted-foreground">Fecha</p>
+                              <p className="text-sm font-medium">{new Date(p.operation_date).toLocaleDateString()}</p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <p className="text-xs text-muted-foreground">Agencia</p>
+                            <p className="text-sm font-medium">{p.agency_number}</p>
+                          </div>
+
+
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="w-full group-hover:bg-sky-500 group-hover:text-white group-hover:border-sky-500 transition-colors"
+                            onClick={() => openEvidenceModal(p)}
+                          >
+                            <IconEye className="h-4 w-4 mr-2" />
+                            Ver evidencia y validar
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
               )}
             </CardContent>
