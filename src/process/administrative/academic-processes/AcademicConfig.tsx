@@ -271,7 +271,7 @@ export default function AcademicConfig() {
 
           {/* Main Configuration Card */}
           <Card className="border-2 shadow-xl">
-            <CardHeader className="border-b bg-slate-50 dark:bg-slate-900/50">
+            <CardHeader className="border-b">
               <CardTitle className="text-2xl flex items-center gap-2">
                 <IconSettings className="h-6 w-6 text-blue-600" />
                 Parámetros del Sistema
