@@ -1,6 +1,7 @@
 // src/services/marketingService.ts
 import { config } from '../../config/academic-config'; // ← Cambiado de technology-config
 import { authenticatedFetch } from './authService';
+import { config as marketingConfig } from '../../config/marketing-config';
 
 export interface StudentProfile {
   id: number;
@@ -93,7 +94,7 @@ function mapStudentToUI(student: StudentFromAPI): StudentForUI {
   const diasDesdeRegistro = Math.floor(
     (new Date().getTime() - new Date(student.created_at).getTime()) / (1000 * 60 * 60 * 24)
   );
-  
+
   let estado: StudentForUI['estado'] = 'lead';
   if (diasDesdeRegistro > 60) {
     estado = Math.random() > 0.5 ? 'graduado' : 'cursando';
@@ -111,7 +112,7 @@ function mapStudentToUI(student: StudentFromAPI): StudentForUI {
   const tieneObjetivo = !!student.student_profile?.learning_goal;
   const tieneAvatar = !!student.avatar;
   const tieneTelefono = !!student.phone;
-  
+
   const engagementScore = Math.round(
     (tieneIntereses ? 40 : 0) +
     (tieneObjetivo ? 30 : 0) +
@@ -158,37 +159,146 @@ export async function fetchStudents(): Promise<StudentForUI[]> {
   try {
     // Construir URL correctamente desde academic-config
     const url = `${config.apiUrl}${config.endpoints.marketing.students}`;
-    
+
     console.log('[marketingService] Fetching students from:', url);
-    
+
     // Usar authenticatedFetch con Bearer token
     const response = await authenticatedFetch(url);
-    
+
     if (!response.ok) {
       throw new Error(`Error fetching students: ${response.statusText}`);
     }
 
     const data = await response.json();
     console.log('[marketingService] Students response:', data);
-    
+
     // La API devuelve { data: [...], meta: {...} }
     const students: StudentFromAPI[] = data.data || [];
-    
+
     return students.map(mapStudentToUI);
   } catch (error) {
     console.error('[marketingService] Error fetching students:', error);
-    
+
     // Si el error es de autenticación, redirigir al login
     if (error instanceof Error && error.message.includes('login')) {
       if (typeof window !== 'undefined') {
         window.location.href = '/auth/marketing';
       }
     }
-    
+
     return [];
   }
 }
 
+// ============================================ 
+// PROPOSALS TYPES & INTERFACES
+// ============================================
+
+export interface ProposalFromAPI {
+  id: number;
+  title: string;
+  description: string;
+  area: string;
+  priority: 'alto' | 'medio' | 'bajo';
+  status: 'borrador' | 'activa' | 'pausada' | 'aprobada' | 'rechazada';
+  target_audience: string;
+  created_by: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProposalForUI {
+  id: number;
+  tema: string;
+  descripcion: string;
+  departamento: string;
+  prioridad: 'alta' | 'media' | 'baja';
+  estado: 'borrador' | 'activa' | 'pausada' | 'aprobada' | 'rechazada';
+  publico: string[];
+  creadoPor: number;
+  fecha: string;
+  actualizado: string;
+}
+
+export interface CreateProposalDTO {
+  title: string;
+  description: string;
+  area: string;
+  priority: 'alto' | 'medio' | 'bajo';
+  target_audience: string;
+}
+
+export interface UpdateProposalDTO {
+  title?: string;
+  description?: string;
+  area?: string;
+  priority?: 'alto' | 'medio' | 'bajo';
+  status?: 'borrador' | 'activa' | 'pausada' | 'aprobada' | 'rechazada';
+  target_audience?: string;
+}
+
+// ============================================
+// PROPOSALS MAPPERS
+// ============================================
+
+function mapProposalFromAPI(apiProposal: ProposalFromAPI): ProposalForUI {
+  return {
+    id: apiProposal.id,
+    tema: apiProposal.title,
+    descripcion: apiProposal.description,
+    departamento: apiProposal.area,
+    prioridad: apiProposal.priority === 'alto' ? 'alta' : apiProposal.priority === 'medio' ? 'media' : 'baja',
+    estado: apiProposal.status,
+    publico: apiProposal.target_audience.split(',').map(p => p.trim()),
+    creadoPor: apiProposal.created_by,
+    fecha: apiProposal.created_at,
+    actualizado: apiProposal.updated_at
+  };
+}
+
+// ============================================
+// PROPOSALS API FUNCTIONS
+// ============================================
+
+/**
+ * Obtener todas las propuestas
+ */
+export async function fetchProposals(): Promise<ProposalForUI[]> {
+  try {
+    const endpoint = marketingConfig.endpoints.proposals.list;
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${marketingConfig.apiUrl}/api${endpoint}`;
+
+    console.log('[marketingService] Fetching proposals from:', url);
+
+    const response = await authenticatedFetch(url);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ProposalFromAPI[] = await response.json();
+    console.log('[marketingService] Proposals fetched:', data.length);
+
+    return data.map(mapProposalFromAPI);
+  } catch (error) {
+    console.error('[marketingService] Error fetching proposals:', error);
+    throw error;
+  }
+}
+
+/**
+ * Obtener una propuesta por ID
+ */
+export async function fetchProposalById(id: number): Promise<ProposalForUI> {
+  try {
+    const endpoint = marketingConfig.endpoints.proposals.detail.replace(':id', String(id));
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${marketingConfig.apiUrl}/api${endpoint}`;
+
+    console.log('[marketingService] Fetching proposal by ID:', url);
 /**
  * Mapea los datos de curso de la API a la estructura que necesita la UI
  */
@@ -232,6 +342,103 @@ export async function fetchCourses(): Promise<CourseForUI[]> {
     const response = await authenticatedFetch(url);
 
     if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ProposalFromAPI = await response.json();
+    return mapProposalFromAPI(data);
+  } catch (error) {
+    console.error('[marketingService] Error fetching proposal:', error);
+    throw error;
+  }
+}
+
+/**
+ * Crear nueva propuesta
+ */
+export async function createProposal(proposal: CreateProposalDTO): Promise<ProposalForUI> {
+  try {
+    const endpoint = marketingConfig.endpoints.proposals.create;
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${marketingConfig.apiUrl}/api${endpoint}`;
+
+    console.log('[marketingService] Creating proposal:', url);
+
+    const response = await authenticatedFetch(url, {
+      method: 'POST',
+      body: JSON.stringify(proposal)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ProposalFromAPI = await response.json();
+    console.log('[marketingService] Proposal created:', data.id);
+
+    return mapProposalFromAPI(data);
+  } catch (error) {
+    console.error('[marketingService] Error creating proposal:', error);
+    throw error;
+  }
+}
+
+/**
+ * Actualizar propuesta
+ */
+export async function updateProposal(id: number, updates: UpdateProposalDTO): Promise<ProposalForUI> {
+  try {
+    const endpoint = marketingConfig.endpoints.proposals.update.replace(':id', String(id));
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${marketingConfig.apiUrl}/api${endpoint}`;
+
+    console.log('[marketingService] Updating proposal:', url);
+
+    const response = await authenticatedFetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(updates)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ProposalFromAPI = await response.json();
+    console.log('[marketingService] Proposal updated:', data.id);
+
+    return mapProposalFromAPI(data);
+  } catch (error) {
+    console.error('[marketingService] Error updating proposal:', error);
+    throw error;
+  }
+}
+
+/**
+ * Eliminar propuesta
+ */
+export async function deleteProposal(id: number): Promise<void> {
+  try {
+    const endpoint = marketingConfig.endpoints.proposals.delete.replace(':id', String(id));
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${marketingConfig.apiUrl}/api${endpoint}`;
+
+    console.log('[marketingService] Deleting proposal:', url);
+
+    const response = await authenticatedFetch(url, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    console.log('[marketingService] Proposal deleted:', id);
+  } catch (error) {
+    console.error('[marketingService] Error deleting proposal:', error);
+    throw error;
       throw new Error(`Error fetching courses: ${response.statusText}`);
     }
 

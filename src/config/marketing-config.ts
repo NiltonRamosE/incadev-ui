@@ -1,32 +1,30 @@
 /**
  * @abstract Config file
- * @description Este archivo contiene la configuracion de la aplicacion.
- * para esto, se ha creado un objeto config que contiene la url de la api y los endpoints.
- **/
+ * @description Configuración del módulo de marketing.
+ */
 
 export const config = {
-  apiUrl: "https://instituto.cetivirgendelapuerta.com/academico/backend/marketing",
-  //apiUrl: "http://127.0.0.1:8000",
+  apiUrl: "http://127.0.0.1:8002",
   environment: "development",
 
   endpoints: {
-    // Propuestas
-    propuestas: {
-      list: "/propuestas",
-      create: "/propuestas",
-      detail: "/propuestas/:id",
-      update: "/propuestas/:id",
-      delete: "/propuestas/:id",
+    // Proposals
+    proposals: {
+      list: "/proposals",
+      create: "/proposals",
+      detail: "/proposals/:id",
+      update: "/proposals/:id",
+      delete: "/proposals/:id",
     },
 
-    // Campañas
-    campañas: {
-      list: "/campañas",
-      create: "/campañas",
-      detail: "/campañas/:id",
-      update: "/campañas/:id",
-      delete: "/campañas/:id",
-      stats: "/campañas/:id/stats",
+    // Campaigns
+    campaigns: {
+      list: "/campaigns",
+      create: "/campaigns",
+      detail: "/campaigns/:id",
+      update: "/campaigns/:id",
+      delete: "/campaigns/:id",
+      stats: "/campaigns/:id/stats",
     },
 
     // Chatbot
@@ -41,30 +39,35 @@ export const config = {
       testCanal: "/chatbot/canales/:id/test",
     },
 
-    // Métricas
-    metricas: {
-      general: "/metricas",
-      chatbot: "/metricas/chatbot",
-      campañas: "/metricas/campañas",
-      propuestas: "/metricas/propuestas",
-      tendencias: "/metricas/tendencias",
+    // Posts
+    posts: {
+      list: "/posts",
+      create: "/posts",
+      detail: "/posts/:id",
+      update: "/posts/:id",
+      delete: "/posts/:id",
     },
 
-    // Cursos (para marketing)
+    // Metrics
+    metrics: {
+      list: "/metrics",
+      detail: "/metrics/:id",
+    },
+
+    // Cursos
     cursos: {
       list: "/cursos",
       detail: "/cursos/:id",
       proximos: "/cursos/proximos",
     },
 
-    // Alumnos (para marketing)
+    // Alumnos
     alumnos: {
       resumen: "/alumnos/resumen",
       stats: "/alumnos/stats",
     },
   },
 
-  // URLs externas y webhooks
   externalUrls: {
     webhook: {
       whatsapp: "https://instituto.cetivirgendelapuerta.com/api/webhook/wa",
