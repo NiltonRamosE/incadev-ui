@@ -105,6 +105,8 @@ export interface AuditFormData {
     auditable_type: string
     auditable_id: number
     auditor_id?: number
+    status?: AuditStatus
+    recommendation?: string
 }
 
 export interface RecommendationFormData {
