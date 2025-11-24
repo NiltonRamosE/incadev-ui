@@ -1,7 +1,10 @@
 ---
 import Layout from "../../../layouts/MarketingLayout.astro";
 
-export const prerender = false;
+// Para modo estático, generamos paths vacíos y manejamos el ID desde el cliente
+export function getStaticPaths() {
+  return [];
+}
 
 const { id } = Astro.params;
 
