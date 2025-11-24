@@ -51,7 +51,7 @@ export const adminNavItems: NavItem[] = [
     title: "Panel Principal",
     url: "#",
     icon: IconHome2,
-    allowedRoles:["data_analyst","enrollment_manager","system_viewer","financial_manager","human_resources"],
+    allowedRoles: ["data_analyst", "enrollment_manager", "system_viewer", "human_resources"],
     items: [
       { title: "Dashboard", url: "/administrativo/dashboard" },
       { title: "Indicadores", url: "/administrativo/indicadores" },
@@ -65,7 +65,7 @@ export const adminNavItems: NavItem[] = [
     title: "Gestión Académica",
     url: "#",
     icon: IconSchool,
-    allowedRoles:["enrollment_manager"],
+    allowedRoles: ["enrollment_manager"],
     items: [
       { title: "Estudiantes", url: "/administrativo/gestion-academica/estudiantes" },
       { title: "Matrículas", url: "/administrativo/gestion-academica/matriculas" },
@@ -80,7 +80,7 @@ export const adminNavItems: NavItem[] = [
     title: "Procesos Académicos",
     url: "#",
     icon: IconChalkboard,
-    allowedRoles:["enrollment_manager"],
+    allowedRoles: ["enrollment_manager"],
     items: [
       {
         title: "Configuración Académica",
@@ -109,7 +109,7 @@ export const adminNavItems: NavItem[] = [
     title: "Pagos Académicos",
     url: "#",
     icon: IconCreditCard,
-    allowedRoles:["financial_manager"],
+    allowedRoles: ["financial_manager", "enrollment_manager"],
     items: [
       { title: "Historial de Pagos", url: "/administrativo/pagos/history" },
       { title: "Validar Pagos", url: "/administrativo/pagos/approval" },
@@ -125,7 +125,7 @@ export const adminNavItems: NavItem[] = [
     title: "Recursos Humanos",
     url: "#",
     icon: IconUsers,
-    allowedRoles:["human_resources"],
+    allowedRoles: ["human_resources"],
     items: [
       { title: "Ofertas Laborales", url: "/administrativo/offers" },
       { title: "Postulaciones", url: "/administrativo/applications" },
@@ -141,7 +141,7 @@ export const adminNavItems: NavItem[] = [
     title: "Finanzas",
     url: "#",
     icon: IconChartBar,
-    allowedRoles:["financial_manager"],
+    allowedRoles: ["financial_manager"],
     items: [
       { title: "Balance General", url: "/administrativo/finanzas/balance" },
       { title: "Reportes Contables", url: "/administrativo/finanzas/reportes" },
@@ -155,7 +155,7 @@ export const adminNavItems: NavItem[] = [
     title: "Gestión Documentaria",
     url: "#",
     icon: IconFileText,
-    allowedRoles:["data_analyst"],
+    allowedRoles: ["data_analyst"],
     items: [
       { title: "Documentos Administrativos", url: "/administrativo/gestion-documentaria/documentos" },
       { title: "Firmas Administrativas", url: "/administrativo/gestion-documentaria/firmas-directores" },
