@@ -1,6 +1,12 @@
 ---
 import DashboardLayout from '@/layouts/DashboardLayout.astro';
 import ThreadListPage from '@/process/academic/dasboard/foros/thread-list/ThreadListPage';
+
+// Para modo estático, generamos paths vacíos y manejamos el ID desde el cliente
+export function getStaticPaths() {
+  return [];
+}
+
 const robots = ["noindex", "nofollow"];
 
 const { forumId } = Astro.params;
