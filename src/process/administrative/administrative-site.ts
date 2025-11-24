@@ -51,7 +51,7 @@ export const adminNavItems: NavItem[] = [
     title: "Panel Principal",
     url: "#",
     icon: IconHome2,
-    allowedRoles: ["data_analyst", "enrollment_manager", "system_viewer", "human_resources"],
+    allowedRoles: ["data_analyst", "enrollment_manager", "system_viewer", "human_resources", "financial_manager"],
     items: [
       { title: "Dashboard", url: "/administrativo/dashboard" },
       { title: "Indicadores", url: "/administrativo/indicadores" },
