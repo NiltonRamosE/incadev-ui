@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { config } from "@/config/academic-config";
+import { config } from "@/config/support-config";
 import type { VoteData } from "../types";
 
 interface UseVotesResult {
@@ -26,7 +26,7 @@ export function useVotes(token: string | null): UseVotesResult {
         throw new Error("ID de usuario no disponible");
       }
 
-      const url = `${config.tutoringApiUrl}${config.endpoints.votes.voteThread.replace(':threadId', String(threadId))}?user_id=${userId}`;
+      const url = `${config.apiUrl}${config.endpoints.votes.voteThread.replace(':threadId', String(threadId))}?user_id=${userId}`;
       
       const response = await fetch(url, {
         method: "POST",
@@ -65,7 +65,7 @@ export function useVotes(token: string | null): UseVotesResult {
         throw new Error("ID de usuario no disponible");
       }
 
-      const url = `${config.tutoringApiUrl}${config.endpoints.votes.voteComment.replace(':commentId', String(commentId))}?user_id=${userId}`;
+      const url = `${config.apiUrl}${config.endpoints.votes.voteComment.replace(':commentId', String(commentId))}?user_id=${userId}`;
       
       const response = await fetch(url, {
         method: "POST",

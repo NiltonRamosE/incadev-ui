@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { config } from "@/config/academic-config";
+import { config } from "@/config/support-config";
 import type { Thread } from "../types";
 
 interface UseThreadsResult {
@@ -32,7 +32,7 @@ export function useThreads(token: string | null, forumId: number | null): UseThr
       setError(null);
       
       const tokenWithoutQuotes = token.replace(/^"|"$/g, '');
-      const url = `${config.tutoringApiUrl}${config.endpoints.threads.listByForum.replace(':forumId', String(forumId))}`;
+      const url = `${config.apiUrl}${config.endpoints.threads.listByForum.replace(':forumId', String(forumId))}`;
       
       const response = await fetch(url, {
         method: "GET",
