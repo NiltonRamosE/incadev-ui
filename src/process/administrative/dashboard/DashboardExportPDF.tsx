@@ -2,20 +2,101 @@
 import { useState, useEffect } from "react";
 import { config } from "@/config/administrative-config";
 
+// Interfaces para los tipos de datos
+interface Course {
+  id: number;
+  name: string;
+  version: string;
+  price: number;
+  enrollments: number;
+  status: "published" | "draft" | "archived" | "active";
+}
+
+interface Student {
+  id: number;
+  name: string;
+  email: string;
+  courses: number;
+  status: "active" | "inactive";
+}
+
+interface Teacher {
+  id: number;
+  name: string;
+  speciality: string;
+  courses: number;
+  students: number;
+}
+
+interface Payment {
+  id: number;
+  student: string;
+  date: string;
+  amount: number;
+  status: "approved" | "pending" | "rejected" | "paid" | "partially_paid" | "cancelled" | "completed";
+}
+
+interface PayrollExpense {
+  id: number;
+  teacher: string;
+  date: string;
+  amount: number;
+  type: "monthly" | "hourly";
+}
+
+interface Enrollment {
+  id: number;
+  student: string;
+  course: string;
+  amount: number;
+  payment_status: "approved" | "pending" | "rejected" | "paid" | "partially_paid" | "cancelled" | "completed";
+  academic_status: "active" | "completed" | "inactive" | "dropped";
+}
+
+interface Stats {
+  activeStudents: number;
+  totalStudents: number;
+  activeCourses: number;
+  totalEnrollments: number;
+  totalRevenue: number;
+  paidEnrollments: number;
+  netIncome: number;
+  totalPayroll: number;
+}
+
+interface MonthlyData {
+  month: string;
+  revenue: number;
+  expenses: number;
+}
+
+interface CourseDistribution {
+  name: string;
+  students: number;
+  percentage: number;
+}
+
 interface DashboardExportData {
-  courses: any[];
-  students: any[];
-  teachers: any[];
-  enrollments: any[];
-  payments: any[];
-  payroll: any[];
-  stats: any;
-  monthlyData: any[];
-  coursesDistribution: any[];
+  courses: Course[];
+  students: Student[];
+  teachers: Teacher[];
+  enrollments: Enrollment[];
+  payments: Payment[];
+  payroll: PayrollExpense[];
+  stats: Stats;
+  monthlyData: MonthlyData[];
+  coursesDistribution: CourseDistribution[];
+}
+
+// Extender la interfaz Window para incluir dashboardExportData
+declare global {
+  interface Window {
+    dashboardExportData?: DashboardExportData;
+  }
 }
 
 export default function DashboardExportPDF() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<DashboardExportData | null>(null);
 
@@ -29,14 +110,14 @@ export default function DashboardExportPDF() {
     }
   }, [loading, data]);
 
-  const loadReportData = async () => {
+  const loadReportData = async (): Promise<void> => {
     try {
       setLoading(true);
 
-      let exportData: any;
+      let exportData: DashboardExportData;
 
-      if ((window as any).dashboardExportData) {
-        exportData = (window as any).dashboardExportData;
+      if (window.dashboardExportData) {
+        exportData = window.dashboardExportData;
       } else {
         const apiUrl = `${config.apiUrl}${config.endpoints.export_pdf}`;
         const response = await fetch(apiUrl, {
@@ -48,7 +129,7 @@ export default function DashboardExportPDF() {
         });
 
         if (!response.ok) {
-          throw new Error(`Error ${response.status}`);
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
 
         const json = await response.json();
@@ -73,14 +154,14 @@ export default function DashboardExportPDF() {
     }
   };
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number): string => {
     return `S/ ${amount.toLocaleString("es-PE", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString("es-PE", {
       year: "numeric",
       month: "short",
@@ -88,7 +169,7 @@ export default function DashboardExportPDF() {
     });
   };
 
-  const getCurrentDateTime = () => {
+  const getCurrentDateTime = (): string => {
     const now = new Date();
     return (
       now.toLocaleDateString("es-PE", {
@@ -104,7 +185,7 @@ export default function DashboardExportPDF() {
   const getStatusBadge = (
     status: string,
     type: "payment" | "academic" = "payment"
-  ) => {
+  ): string => {
     const statusMap: Record<string, string> = {
       // Estados de pago
       approved: "Aprobado",
@@ -116,7 +197,6 @@ export default function DashboardExportPDF() {
       completed: "Completado",
       // Estados académicos
       active: "Activo",
-      completed: "Completado",
       inactive: "Inactivo",
       dropped: "Abandonado",
     };
@@ -126,7 +206,7 @@ export default function DashboardExportPDF() {
   const getStatusColor = (
     status: string,
     type: "payment" | "academic" = "payment"
-  ) => {
+  ): string => {
     if (type === "payment") {
       switch (status) {
         case "approved":

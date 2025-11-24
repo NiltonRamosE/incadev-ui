@@ -10,6 +10,14 @@ export default defineConfig({
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        external: ['dompurify']
+      }
+    },
+    ssr: {
+      noExternal: ['jspdf']
+    },
     server: {
       proxy: {
         '/api': {
