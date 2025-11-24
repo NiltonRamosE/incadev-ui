@@ -9,7 +9,7 @@ export const config = {
   //apiUrl: "http://localhost:8000/api",
   environment: "development",
   endpoints: {
-    // Authentication
+    // Authentication 
     auth: {
       register: "/auth/register",
       login: "/auth/login",
