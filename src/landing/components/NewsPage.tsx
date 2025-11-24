@@ -53,7 +53,7 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Search, Eye, MoreVertical, Loader2, FileText } from "lucide-react"
 import { technologyApi } from "@/services/tecnologico/api"
 import type { News, NewsCategory } from "@/types/developer-web"
-import { NewsForm } from "./NewsForm"
+import { NewsForm } from "@/process/technology/dashboard/NewsForm"
 import { NewsStatusLabels, NewsStatusColors, NewsItemTypeLabels, NewsItemTypeColors } from "@/types/developer-web"
 
 export default function NewsPage() {
