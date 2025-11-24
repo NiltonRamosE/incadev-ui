@@ -68,7 +68,7 @@ export default function AuditReportPage() {
 
     const getStatusVariant = (status: string) => {
         const variants = {
-            completed: "success",
+            completed: "secondary",
         } as const
         return variants[status as keyof typeof variants] || "secondary"
     }
