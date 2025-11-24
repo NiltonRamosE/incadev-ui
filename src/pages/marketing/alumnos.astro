@@ -72,7 +72,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
       >
         <div class="flex items-center justify-between mb-2">
           <p class="text-sm font-medium text-green-600 dark:text-green-400">
-            LTV Promedio
+            Egresados
           </p>
           <svg
             class="w-8 h-8 text-green-600 dark:text-green-400"
@@ -84,17 +84,17 @@ import Layout from "../../layouts/MarketingLayout.astro";
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
             ></path>
           </svg>
         </div>
         <p
-          id="stat-ltv"
+          id="stat-egresados"
           class="text-3xl font-bold text-gray-900 dark:text-white mb-1"
         >
-          $0
+          0
         </p>
-        <p class="text-xs text-gray-600 dark:text-gray-400">Por alumno</p>
+        <p class="text-xs text-gray-600 dark:text-gray-400">Con certificado</p>
       </div>
 
       <div
@@ -163,7 +163,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
     </div>
 
     <!-- Filtros por Estado -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
       <button
         class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-blue-500 dark:border-blue-500 rounded-lg smooth-transition hover:shadow-md"
         data-filter="todos"
@@ -182,64 +182,30 @@ import Layout from "../../layouts/MarketingLayout.astro";
       </button>
 
       <button
-        class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-500 rounded-lg smooth-transition hover:shadow-md"
-        data-filter="lead"
-      >
-        <div class="text-center">
-          <p
-            id="filter-lead"
-            class="text-2xl font-bold text-green-600 dark:text-green-400"
-          >
-            0
-          </p>
-          <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
-            Leads
-          </p>
-        </div>
-      </button>
-
-      <button
         class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-yellow-500 dark:hover:border-yellow-500 rounded-lg smooth-transition hover:shadow-md"
-        data-filter="preinscrito"
+        data-filter="pendiente"
       >
         <div class="text-center">
           <p
-            id="filter-preinscrito"
+            id="filter-pendiente"
             class="text-2xl font-bold text-yellow-600 dark:text-yellow-400"
           >
             0
           </p>
           <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
-            Pre-inscritos
+            Pendientes
           </p>
         </div>
       </button>
 
       <button
         class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-blue-500 dark:hover:border-blue-500 rounded-lg smooth-transition hover:shadow-md"
-        data-filter="inscrito"
-      >
-        <div class="text-center">
-          <p
-            id="filter-inscrito"
-            class="text-2xl font-bold text-blue-600 dark:text-blue-400"
-          >
-            0
-          </p>
-          <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
-            Inscritos
-          </p>
-        </div>
-      </button>
-
-      <button
-        class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-purple-500 dark:hover:border-purple-500 rounded-lg smooth-transition hover:shadow-md"
         data-filter="cursando"
       >
         <div class="text-center">
           <p
             id="filter-cursando"
-            class="text-2xl font-bold text-purple-600 dark:text-purple-400"
+            class="text-2xl font-bold text-blue-600 dark:text-blue-400"
           >
             0
           </p>
@@ -250,18 +216,69 @@ import Layout from "../../layouts/MarketingLayout.astro";
       </button>
 
       <button
-        class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-lg smooth-transition hover:shadow-md"
-        data-filter="graduado"
+        class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-500 rounded-lg smooth-transition hover:shadow-md"
+        data-filter="completado"
       >
         <div class="text-center">
           <p
-            id="filter-graduado"
-            class="text-2xl font-bold text-emerald-600 dark:text-emerald-400"
+            id="filter-completado"
+            class="text-2xl font-bold text-green-600 dark:text-green-400"
           >
             0
           </p>
           <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
-            Graduados
+            Completados
+          </p>
+        </div>
+      </button>
+
+      <button
+        class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-purple-500 dark:hover:border-purple-500 rounded-lg smooth-transition hover:shadow-md"
+        data-filter="egresado"
+      >
+        <div class="text-center">
+          <p
+            id="filter-egresado"
+            class="text-2xl font-bold text-purple-600 dark:text-purple-400"
+          >
+            0
+          </p>
+          <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
+            Egresados
+          </p>
+        </div>
+      </button>
+
+      <button
+        class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-500 rounded-lg smooth-transition hover:shadow-md"
+        data-filter="desertor"
+      >
+        <div class="text-center">
+          <p
+            id="filter-desertor"
+            class="text-2xl font-bold text-red-600 dark:text-red-400"
+          >
+            0
+          </p>
+          <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
+            Desertores
+          </p>
+        </div>
+      </button>
+
+      <button
+        class="filter-btn p-4 bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-orange-500 dark:hover:border-orange-500 rounded-lg smooth-transition hover:shadow-md"
+        data-filter="reprobado"
+      >
+        <div class="text-center">
+          <p
+            id="filter-reprobado"
+            class="text-2xl font-bold text-orange-600 dark:text-orange-400"
+          >
+            0
+          </p>
+          <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 font-medium">
+            Reprobados
           </p>
         </div>
       </button>
@@ -302,17 +319,6 @@ import Layout from "../../layouts/MarketingLayout.astro";
         <option value="Ciberseguridad">Ciberseguridad</option>
         <option value="Marketing Digital">Marketing Digital</option>
         <option value="Gestión de Proyectos">Gestión de Proyectos</option>
-      </select>
-
-      <select
-        id="filterOrigen"
-        class="px-4 py-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-800 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      >
-        <option value="">Todos los orígenes</option>
-        <option value="Facebook">Facebook</option>
-        <option value="Instagram">Instagram</option>
-        <option value="Referido">Referido</option>
-        <option value="Orgánico">Orgánico</option>
       </select>
 
       <button
@@ -357,82 +363,65 @@ import Layout from "../../layouts/MarketingLayout.astro";
   </div>
 
   <script>
-    import { fetchStudents, type StudentForUI } from "../../services/marketing";
+    import { fetchAlumnosData, type AlumnoForUI, type StudentStatsForUI } from "../../services/marketing";
 
     // ============================================
-    // CONFIGURACIÓN DE ESTADOS
+    // CONFIGURACIÓN DE ESTADOS (según EnrollmentAcademicStatus)
     // ============================================
     const estadoConfig = {
-      lead: {
-        label: "Lead",
-        icon: "🟢",
-        bg: "bg-green-50 dark:bg-green-950/30",
-        text: "text-green-700 dark:text-green-400",
-        border: "border-green-200 dark:border-green-900/50",
-      },
-      preinscrito: {
-        label: "Pre-inscrito",
+      pendiente: {
+        label: "Pendiente",
         icon: "🟡",
         bg: "bg-yellow-50 dark:bg-yellow-950/30",
         text: "text-yellow-700 dark:text-yellow-400",
         border: "border-yellow-200 dark:border-yellow-900/50",
       },
-      inscrito: {
-        label: "Inscrito",
+      cursando: {
+        label: "Cursando",
         icon: "🔵",
         bg: "bg-blue-50 dark:bg-blue-950/30",
         text: "text-blue-700 dark:text-blue-400",
         border: "border-blue-200 dark:border-blue-900/50",
       },
-      cursando: {
-        label: "Cursando",
-        icon: "⚫",
-        bg: "bg-purple-50 dark:bg-purple-950/30",
-        text: "text-purple-700 dark:text-purple-400",
-        border: "border-purple-200 dark:border-purple-900/50",
-      },
-      graduado: {
-        label: "Graduado",
+      completado: {
+        label: "Completado",
         icon: "✅",
-        bg: "bg-emerald-50 dark:bg-emerald-950/30",
-        text: "text-emerald-700 dark:text-emerald-400",
-        border: "border-emerald-200 dark:border-emerald-900/50",
+        bg: "bg-green-50 dark:bg-green-950/30",
+        text: "text-green-700 dark:text-green-400",
+        border: "border-green-200 dark:border-green-900/50",
+      },
+      reprobado: {
+        label: "Reprobado",
+        icon: "❌",
+        bg: "bg-orange-50 dark:bg-orange-950/30",
+        text: "text-orange-700 dark:text-orange-400",
+        border: "border-orange-200 dark:border-orange-900/50",
       },
       desertor: {
         label: "Desertor",
-        icon: "❌",
+        icon: "🚫",
         bg: "bg-red-50 dark:bg-red-950/30",
         text: "text-red-700 dark:text-red-400",
         border: "border-red-200 dark:border-red-900/50",
       },
+      egresado: {
+        label: "Egresado",
+        icon: "🎓",
+        bg: "bg-purple-50 dark:bg-purple-950/30",
+        text: "text-purple-700 dark:text-purple-400",
+        border: "border-purple-200 dark:border-purple-900/50",
+      },
     };
 
-    const origenIcons = {
-      Facebook: "📘",
-      Instagram: "📸",
-      Referido: "👥",
-      Orgánico: "🔍",
-    };
-
-    // Variable global para almacenar los alumnos
-    let alumnos: StudentForUI[] = [];
+    // Variables globales
+    let alumnos: AlumnoForUI[] = [];
+    let stats: StudentStatsForUI | null = null;
 
     // ============================================
     // FUNCIONES AUXILIARES
     // ============================================
-    function getEngagementColor(score: number) {
-      if (score >= 80) return "text-green-600 dark:text-green-400";
-      if (score >= 60) return "text-yellow-600 dark:text-yellow-400";
-      return "text-red-600 dark:text-red-400";
-    }
-
-    function getEngagementLabel(score: number) {
-      if (score >= 80) return "Alto";
-      if (score >= 60) return "Medio";
-      return "Bajo";
-    }
-
     function getDiasDesdeRegistro(fecha: string) {
+      if (!fecha) return 0;
       const hoy = new Date();
       const registro = new Date(fecha);
       return Math.floor(
@@ -441,6 +430,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
     }
 
     function getDiasUltimaInteraccion(fecha: string) {
+      if (!fecha) return 0;
       const hoy = new Date();
       const ultima = new Date(fecha);
       return Math.floor(
@@ -458,76 +448,52 @@ import Layout from "../../layouts/MarketingLayout.astro";
     }
 
     // ============================================
-    // ACTUALIZAR ESTADÍSTICAS
+    // ACTUALIZAR ESTADÍSTICAS (usando datos reales del API)
     // ============================================
     function updateStats() {
-      const totalAlumnos = alumnos.length;
-      const ltvPromedio =
-        totalAlumnos > 0
-          ? Math.round(
-              alumnos.reduce((sum, a) => sum + a.ltv, 0) / totalAlumnos,
-            )
-          : 0;
+      if (!stats) return;
 
-      // Contar por estado
-      const contadores = alumnos.reduce(
-        (acc: Record<string, number>, alumno) => {
-          acc[alumno.estado] = (acc[alumno.estado] || 0) + 1;
-          return acc;
-        },
-        {},
-      );
-
-      const leads = contadores.lead || 0;
-      const preinscritos = contadores.preinscrito || 0;
-      const inscritos = contadores.inscrito || 0;
-      const cursando = contadores.cursando || 0;
-      const graduados = contadores.graduado || 0;
-      const desertores = contadores.desertor || 0;
+      const totalAlumnos = stats.totalMatriculados;
 
       // Calcular tasas
-      const totalConvertidos = inscritos + cursando + graduados;
-      const tasaConversion =
-        leads > 0
-          ? ((totalConvertidos / (leads + totalConvertidos)) * 100).toFixed(1)
-          : "0.0";
-      const tasaDesercion =
-        totalAlumnos > 0
-          ? ((desertores / totalAlumnos) * 100).toFixed(1)
-          : "0.0";
+      const tasaCompletados = totalAlumnos > 0
+        ? ((stats.completados / totalAlumnos) * 100).toFixed(1)
+        : "0.0";
+      const tasaDesercion = totalAlumnos > 0
+        ? ((stats.desertores / totalAlumnos) * 100).toFixed(1)
+        : "0.0";
 
-      // Actualizar DOM
+      // Actualizar DOM - Stats principales
       const statTotal = document.getElementById("stat-total");
-      const statLtv = document.getElementById("stat-ltv");
+      const statEgresados = document.getElementById("stat-egresados");
       const statConversion = document.getElementById("stat-conversion");
       const statDesercion = document.getElementById("stat-desercion");
-      const statDesercionLabel = document.getElementById(
-        "stat-desercion-label",
-      );
+      const statDesercionLabel = document.getElementById("stat-desercion-label");
 
       if (statTotal) statTotal.textContent = String(totalAlumnos);
-      if (statLtv) statLtv.textContent = `$${ltvPromedio}`;
-      if (statConversion) statConversion.textContent = `${tasaConversion}%`;
+      if (statEgresados) statEgresados.textContent = String(stats.egresados);
+      if (statConversion) statConversion.textContent = `${tasaCompletados}%`;
       if (statDesercion) statDesercion.textContent = `${tasaDesercion}%`;
       if (statDesercionLabel)
         statDesercionLabel.textContent =
           parseFloat(tasaDesercion) < 10 ? "Tasa baja ✓" : "Revisar";
 
-      // Actualizar filtros
+      // Actualizar filtros con conteos reales
       const filterTodos = document.getElementById("filter-todos");
-      const filterLead = document.getElementById("filter-lead");
-      const filterPreinscrito = document.getElementById("filter-preinscrito");
-      const filterInscrito = document.getElementById("filter-inscrito");
+      const filterPendiente = document.getElementById("filter-pendiente");
       const filterCursando = document.getElementById("filter-cursando");
-      const filterGraduado = document.getElementById("filter-graduado");
+      const filterCompletado = document.getElementById("filter-completado");
+      const filterEgresado = document.getElementById("filter-egresado");
+      const filterDesertor = document.getElementById("filter-desertor");
+      const filterReprobado = document.getElementById("filter-reprobado");
 
       if (filterTodos) filterTodos.textContent = String(totalAlumnos);
-      if (filterLead) filterLead.textContent = String(leads);
-      if (filterPreinscrito)
-        filterPreinscrito.textContent = String(preinscritos);
-      if (filterInscrito) filterInscrito.textContent = String(inscritos);
-      if (filterCursando) filterCursando.textContent = String(cursando);
-      if (filterGraduado) filterGraduado.textContent = String(graduados);
+      if (filterPendiente) filterPendiente.textContent = String(stats.pendientes);
+      if (filterCursando) filterCursando.textContent = String(stats.cursando);
+      if (filterCompletado) filterCompletado.textContent = String(stats.completados);
+      if (filterEgresado) filterEgresado.textContent = String(stats.egresados);
+      if (filterDesertor) filterDesertor.textContent = String(stats.desertores);
+      if (filterReprobado) filterReprobado.textContent = String(stats.reprobados);
     }
 
     // ============================================
@@ -537,7 +503,6 @@ import Layout from "../../layouts/MarketingLayout.astro";
       estado?: string;
       busqueda?: string;
       interes?: string;
-      origen?: string;
     }
 
     function renderAlumnos(filtros: Filtros = {}) {
@@ -570,12 +535,6 @@ import Layout from "../../layouts/MarketingLayout.astro";
         );
       }
 
-      // Filtro por origen
-      if (filtros.origen) {
-        const origen = filtros.origen;
-        filtered = filtered.filter((a) => a.origen === origen);
-      }
-
       if (filtered.length === 0) {
         container.classList.add("hidden");
         emptyState?.classList.remove("hidden");
@@ -587,11 +546,9 @@ import Layout from "../../layouts/MarketingLayout.astro";
 
       container.innerHTML = filtered
         .map((a) => {
-          const estado = estadoConfig[a.estado];
-          const engagementColor = getEngagementColor(a.engagementScore);
-          const engagementLabel = getEngagementLabel(a.engagementScore);
+          const estado = estadoConfig[a.estado] || estadoConfig.pendiente;
           const diasRegistro = getDiasDesdeRegistro(a.fechaRegistro);
-          const diasInteraccion = getDiasUltimaInteraccion(a.ultimaInteraccion);
+          const diasInteraccion = getDiasUltimaInteraccion(a.ultimaActualizacion);
           const initials = getInitials(a.nombre);
 
           return `
@@ -634,9 +591,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
                   </svg>
                   <span class="text-sm font-medium text-gray-900 dark:text-white">${a.curso}</span>
                 </div>
-                <span class="text-xs text-gray-500 dark:text-gray-400">
-                  ${origenIcons[a.origen as keyof typeof origenIcons]} ${a.origen}
-                </span>
+                ${a.dni ? `<span class="text-xs text-gray-500 dark:text-gray-400">DNI: ${a.dni}</span>` : ''}
               </div>
               ${
                 a.learningGoal
@@ -650,7 +605,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
             </div>
 
             ${
-              a.interests.length > 0
+              a.interests && a.interests.length > 0
                 ? `
               <div class="flex flex-wrap gap-2 mb-4">
                 ${a.interests
@@ -666,40 +621,6 @@ import Layout from "../../layouts/MarketingLayout.astro";
             `
                 : ""
             }
-
-            <div class="grid grid-cols-3 gap-3 mb-4">
-              <div class="text-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-900/50">
-                <p class="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">LTV</p>
-                <p class="text-lg font-bold text-gray-900 dark:text-white">$${a.ltv}</p>
-              </div>
-              <div class="text-center p-3 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/20 rounded-lg border border-green-200 dark:border-green-900/50">
-                <p class="text-xs text-green-600 dark:text-green-400 font-medium mb-1">Cursos</p>
-                <p class="text-lg font-bold text-gray-900 dark:text-white">${a.cursosCompletados}</p>
-              </div>
-              <div class="text-center p-3 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-900/50">
-                <p class="text-xs text-purple-600 dark:text-purple-400 font-medium mb-1">Engagement</p>
-                <p class="text-lg font-bold ${engagementColor}">${a.engagementScore}</p>
-              </div>
-            </div>
-
-            <div class="mb-4">
-              <div class="flex items-center justify-between text-xs mb-1">
-                <span class="text-gray-600 dark:text-gray-400">Nivel de compromiso</span>
-                <span class="${engagementColor} font-medium">${engagementLabel}</span>
-              </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div 
-                  class="h-2 rounded-full smooth-transition ${
-                    a.engagementScore >= 80
-                      ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                      : a.engagementScore >= 60
-                        ? "bg-gradient-to-r from-yellow-500 to-orange-500"
-                        : "bg-gradient-to-r from-red-500 to-orange-500"
-                  }" 
-                  style="width: ${a.engagementScore}%"
-                ></div>
-              </div>
-            </div>
 
             <div class="pt-3 border-t border-gray-200 dark:border-gray-800">
               <div class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
@@ -725,9 +646,9 @@ import Layout from "../../layouts/MarketingLayout.astro";
                   `
                   }
                 </div>
-                <button class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                  Ver perfil →
-                </button>
+                <span class="text-blue-600 dark:text-blue-400 font-medium">
+                  ${a.telefono}
+                </span>
               </div>
             </div>
           </div>
@@ -755,7 +676,9 @@ import Layout from "../../layouts/MarketingLayout.astro";
       }
 
       try {
-        alumnos = await fetchStudents();
+        const data = await fetchAlumnosData();
+        alumnos = data.alumnos;
+        stats = data.stats;
         console.log("[Alumnos] Students loaded:", alumnos.length);
 
         if (alumnos.length === 0) {
@@ -803,10 +726,10 @@ import Layout from "../../layouts/MarketingLayout.astro";
               "dark:border-yellow-500",
               "border-purple-500",
               "dark:border-purple-500",
-              "border-emerald-500",
-              "dark:border-emerald-500",
               "border-red-500",
               "dark:border-red-500",
+              "border-orange-500",
+              "dark:border-orange-500",
             );
             b.classList.add("border-gray-200", "dark:border-gray-800");
           });
@@ -814,18 +737,18 @@ import Layout from "../../layouts/MarketingLayout.astro";
           const filter = btn.getAttribute("data-filter");
           if (filter === "todos")
             btn.classList.add("border-blue-500", "dark:border-blue-500");
-          else if (filter === "lead")
-            btn.classList.add("border-green-500", "dark:border-green-500");
-          else if (filter === "preinscrito")
+          else if (filter === "pendiente")
             btn.classList.add("border-yellow-500", "dark:border-yellow-500");
-          else if (filter === "inscrito")
-            btn.classList.add("border-blue-500", "dark:border-blue-500");
           else if (filter === "cursando")
+            btn.classList.add("border-blue-500", "dark:border-blue-500");
+          else if (filter === "completado")
+            btn.classList.add("border-green-500", "dark:border-green-500");
+          else if (filter === "egresado")
             btn.classList.add("border-purple-500", "dark:border-purple-500");
-          else if (filter === "graduado")
-            btn.classList.add("border-emerald-500", "dark:border-emerald-500");
           else if (filter === "desertor")
             btn.classList.add("border-red-500", "dark:border-red-500");
+          else if (filter === "reprobado")
+            btn.classList.add("border-orange-500", "dark:border-orange-500");
           btn.classList.remove("border-gray-200", "dark:border-gray-800");
 
           filtrosActuales.estado = filter || "todos";
@@ -845,18 +768,11 @@ import Layout from "../../layouts/MarketingLayout.astro";
         renderAlumnos(filtrosActuales);
       });
 
-      const filterOrigen = document.getElementById("filterOrigen");
-      filterOrigen?.addEventListener("change", (e) => {
-        filtrosActuales.origen = (e.target as HTMLSelectElement).value;
-        renderAlumnos(filtrosActuales);
-      });
-
       const btnLimpiarFiltros = document.getElementById("btnLimpiarFiltros");
       btnLimpiarFiltros?.addEventListener("click", () => {
         filtrosActuales = { estado: "todos" };
         if (searchInput) (searchInput as HTMLInputElement).value = "";
         if (filterInteres) (filterInteres as HTMLSelectElement).value = "";
-        if (filterOrigen) (filterOrigen as HTMLSelectElement).value = "";
 
         document.querySelectorAll(".filter-btn").forEach((b) => {
           b.classList.remove(
@@ -868,10 +784,10 @@ import Layout from "../../layouts/MarketingLayout.astro";
             "dark:border-yellow-500",
             "border-purple-500",
             "dark:border-purple-500",
-            "border-emerald-500",
-            "dark:border-emerald-500",
             "border-red-500",
             "dark:border-red-500",
+            "border-orange-500",
+            "dark:border-orange-500",
           );
           b.classList.add("border-gray-200", "dark:border-gray-800");
         });
@@ -893,28 +809,30 @@ import Layout from "../../layouts/MarketingLayout.astro";
             "Nombre",
             "Email",
             "DNI",
+            "Telefono",
             "Estado",
-            "Curso/Interés",
-            "LTV",
-            "Engagement",
-            "Origen",
+            "Curso",
+            "Intereses",
+            "Objetivo",
+            "Fecha Registro",
           ],
           ...alumnos.map((a) => [
             a.id,
-            a.nombre,
+            `"${a.nombre}"`,
             a.email,
             a.dni,
+            a.telefono,
             a.estado,
-            a.curso,
-            a.ltv,
-            a.engagementScore,
-            a.origen,
+            `"${a.curso}"`,
+            `"${a.interests.join(', ')}"`,
+            `"${a.learningGoal}"`,
+            a.fechaRegistro?.split('T')[0] || '',
           ]),
         ]
           .map((row) => row.join(","))
           .join("\n");
 
-        const blob = new Blob([csv], { type: "text/csv" });
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;

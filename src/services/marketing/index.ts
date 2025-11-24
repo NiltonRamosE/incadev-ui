@@ -49,6 +49,18 @@ export type {
 // Students
 export { fetchStudents } from './studentService';
 
+// Student Stats (datos reales de alumnos)
+export {
+    fetchAlumnosData,
+    fetchStudentStats,
+    fetchStudentResumen
+} from './studentStatsService';
+export type {
+    AlumnoForUI,
+    StudentStatsForUI,
+    AlumnosDataForUI
+} from './studentStatsService';
+
 // Proposals
 export {
     fetchProposals,
