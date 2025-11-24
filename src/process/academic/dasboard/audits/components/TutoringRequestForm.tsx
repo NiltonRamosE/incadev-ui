@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, CheckCircle2, Calendar } from "lucide-react";
-import { config } from "@/config/academic-config";
+import { config } from "@/config/support-config";
 import { useAcademicAuth } from "@/process/academic/hooks/useAcademicAuth";
 
 interface Teacher {
@@ -83,7 +83,7 @@ export default function TutoringRequestForm({
       setLoadingTeachers(true);
       const tokenWithoutQuotes = token?.replace(/^"|"/g, '');
       const response = await fetch(
-        `${config.tutoringApiUrl}${config.endpoints.tutoring.teachers}`,
+        `${config.apiUrl}${config.endpoints.tutoring.teachers}`,
         {
           method: "GET",
           headers: {
@@ -115,7 +115,7 @@ export default function TutoringRequestForm({
       const tokenWithoutQuotes = token?.replace(/^"|"/g, '');
       const endpoint = config.endpoints.tutoring.teacherAvailability.replace(':teacherId', teacherId);
       const response = await fetch(
-        `${config.tutoringApiUrl}${endpoint}`,
+        `${config.apiUrl}${endpoint}`,
         {
           method: "GET",
           headers: {

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useThreads } from "../hooks/useThreads";
 import { useAcademicAuth } from "@/process/academic/hooks/useAcademicAuth";
-import { config } from "@/config/academic-config";
+import { config } from "@/config/support-config";
 import ThreadList from "../components/ThreadList";
 import CreateThreadDialog from "../components/CreateThreadDialog";
 import type { Forum } from "../types";
@@ -27,7 +27,7 @@ export default function ThreadListPage({ forumId }: ThreadListPageProps) {
 
       try {
         const tokenWithoutQuotes = token.replace(/^"|"$/g, '');
-        const url = `${config.tutoringApiUrl}${config.endpoints.forums.get.replace(':forumId', String(forumId))}`;
+        const url = `${config.apiUrl}${config.endpoints.forums.get.replace(':forumId', String(forumId))}`;
         
         const response = await fetch(url, {
           headers: {
@@ -62,7 +62,7 @@ export default function ThreadListPage({ forumId }: ThreadListPageProps) {
 
     try {
       const tokenWithoutQuotes = token.replace(/^"|"$/g, '');
-      const url = `${config.tutoringApiUrl}${config.endpoints.threads.create.replace(':forumId', String(forumId))}?user_id=${user.id}`;
+      const url = `${config.apiUrl}${config.endpoints.threads.create.replace(':forumId', String(forumId))}?user_id=${user.id}`;
       
       const response = await fetch(url, {
         method: "POST",

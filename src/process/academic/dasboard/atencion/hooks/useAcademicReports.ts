@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAcademicAuth } from "@/process/academic/hooks/useAcademicAuth";
-import { config } from "@/config/academic-config";
+import { config } from "@/config/support-config";
 import type { StudentGroup, GroupGradesResponse } from "../types";
 
 export function useAcademicReports() {
@@ -19,7 +19,7 @@ export function useAcademicReports() {
       
       const tokenWithoutQuotes = token?.replace(/^"|"/g, '');
       const response = await fetch(
-        `${config.tutoringApiUrl}/api/report/student-groups?student_id=${user.id}`,
+        `${config.apiUrl}${config.endpoints.report.studentGroups}?student_id=${user.id}`,
         {
           headers: {
             "Authorization": `Bearer ${tokenWithoutQuotes}`,
@@ -54,7 +54,7 @@ export function useAcademicReports() {
       
       const tokenWithoutQuotes = token?.replace(/^"|"/g, '');
       const response = await fetch(
-        `${config.tutoringApiUrl}/api/report/group-grades?student_id=${user.id}&group_id=${groupId}`,
+        `${config.apiUrl}${config.endpoints.report.groupGrades}?student_id=${user.id}&group_id=${groupId}`,
         {
           headers: {
             "Authorization": `Bearer ${tokenWithoutQuotes}`,
@@ -85,7 +85,7 @@ export function useAcademicReports() {
       
       const tokenWithoutQuotes = token?.replace(/^"|"/g, '');
       const response = await fetch(
-        `${config.tutoringApiUrl}/api/report/reports/enrolled-courses`,
+        `${config.apiUrl}${config.endpoints.report.enrolledCoursesPdf}`,
         {
           method: "POST",
           headers: {
@@ -123,7 +123,7 @@ export function useAcademicReports() {
       
       const tokenWithoutQuotes = token?.replace(/^"|"/g, '');
       const response = await fetch(
-        `${config.tutoringApiUrl}/api/report/reports/single-course-grades`,
+        `${config.apiUrl}${config.endpoints.report.singleCourseGradesPdf}`,
         {
           method: "POST",
           headers: {

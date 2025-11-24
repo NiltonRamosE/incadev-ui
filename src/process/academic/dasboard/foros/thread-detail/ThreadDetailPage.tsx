@@ -7,7 +7,7 @@ import { ArrowLeft, User, MessageSquare } from "lucide-react";
 import { useAcademicAuth } from "@/process/academic/hooks/useAcademicAuth";
 import { useComments } from "../hooks/useComments";
 import { useVotes } from "../hooks/useVotes";
-import { config } from "@/config/academic-config";
+import { config } from "@/config/support-config";
 import VoteControls from "../components/VoteControls";
 import CommentForm from "../components/CommentForm";
 import CommentTree from "../components/CommentTree";
@@ -35,7 +35,7 @@ export default function ThreadDetailPage({ threadId }: ThreadDetailPageProps) {
         const userData = localStorage.getItem("user");
         const userId = userData ? JSON.parse(userData).id : null;
         
-        const url = `${config.tutoringApiUrl}${config.endpoints.threads.get.replace(':threadId', String(threadId))}${userId ? `?user_id=${userId}` : ''}`;
+        const url = `${config.apiUrl}${config.endpoints.threads.get.replace(':threadId', String(threadId))}${userId ? `?user_id=${userId}` : ''}`;
         
         const response = await fetch(url, {
           headers: {
@@ -73,7 +73,7 @@ export default function ThreadDetailPage({ threadId }: ThreadDetailPageProps) {
       const userId = userData ? JSON.parse(userData).id : null;
       
       if (tokenWithoutQuotes && userId) {
-        const url = `${config.tutoringApiUrl}${config.endpoints.threads.get.replace(':threadId', String(threadId))}?user_id=${userId}`;
+        const url = `${config.apiUrl}${config.endpoints.threads.get.replace(':threadId', String(threadId))}?user_id=${userId}`;
         
         const response = await fetch(url, {
           headers: {

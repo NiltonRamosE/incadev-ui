@@ -4,7 +4,7 @@ import TutoringRequestForm from "@/process/academic/dasboard/audits/components/T
 import StudentTutoringList from "@/process/academic/dasboard/audits/components/StudentTutoringList";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
-import { config } from "@/config/academic-config";
+import { config } from "@/config/support-config";
 import { useAcademicAuth } from "@/process/academic/hooks/useAcademicAuth";
 
 export interface StudentTutoring {
@@ -53,7 +53,7 @@ export default function StudentTutoringView() {
       
       const tokenWithoutQuotes = token?.replace(/^"|"/g, '');
       const response = await fetch(
-        `${config.tutoringApiUrl}${config.endpoints.tutoring.studentRequests}?user_id=${user?.id}`,
+        `${config.apiUrl}${config.endpoints.tutoring.studentRequests}?user_id=${user?.id}`,
         {
           method: "GET",
           headers: {
@@ -87,7 +87,7 @@ export default function StudentTutoringView() {
   }) => {
     try {
       const tokenWithoutQuotes = token?.replace(/^"|"/g, '');
-      const url = `${config.tutoringApiUrl}${config.endpoints.tutoring.createRequest}?user_id=${user?.id}`;
+      const url = `${config.apiUrl}${config.endpoints.tutoring.createRequest}?user_id=${user?.id}`;
       
       const response = await fetch(url, {
           method: "POST",
