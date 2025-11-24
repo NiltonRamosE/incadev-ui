@@ -236,6 +236,7 @@ export interface CreatePostDTO {
     content: string;
     content_type: 'image' | 'video' | 'text';
     image_path: string;
+    image_url?: string | null;
     link_url: string;
     status: 'draft' | 'scheduled' | 'published';
     scheduled_at: string | null;
@@ -249,6 +250,7 @@ export interface UpdatePostDTO {
     content?: string;
     content_type?: 'image' | 'video' | 'text';
     image_path?: string;
+    image_url?: string | null;
     link_url?: string;
     status?: 'draft' | 'scheduled' | 'published';
     scheduled_at?: string | null;

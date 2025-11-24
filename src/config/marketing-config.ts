@@ -6,7 +6,12 @@
 export const config = {
   //apiUrl:"https://instituto.cetivirgendelapuerta.com/backend/marketing/public/api"
   apiUrl: "http://127.0.0.1:8002",
+  // Marketing backend auth and related services
   authApiUrl: "http://127.0.0.1:8001/api", // Backend principal para autenticación
+  // Explicit base URLs for related microservices so the UI can target the right hosts
+  generationApiUrl: "http://127.0.0.1:8004", // generativeapi
+  socialApiUrl: "http://127.0.0.1:8005", // socialmediaapi
+  metricsApiUrl: "http://127.0.0.1:8006", // metricsapi (same host used for auth/service)
   environment: "development",
 
   endpoints: {
@@ -49,6 +54,29 @@ export const config = {
       testCanal: "/chatbot/canales/:id/test",
     },
 
+    // Generative content (microservice: generativeapi)
+    // Base prefix used by the backend is `/api/v1/marketing/generation`
+    generation: {
+      facebook: "/api/v1/marketing/generation/facebook",
+      instagram: "/api/v1/marketing/generation/instagram",
+      podcast: "/api/v1/marketing/generation/podcast",
+
+      // Image endpoints
+      image: "/api/v1/marketing/generation/image",
+      imageList: "/api/v1/marketing/generation/image/list",
+      imageSend: "/api/v1/marketing/generation/image/send",
+      imageGet: "/api/v1/marketing/generation/image/:id",
+
+      // Audio endpoints
+      audio: "/api/v1/marketing/generation/audio",
+      audioList: "/api/v1/marketing/generation/audio/list",
+      audioSend: "/api/v1/marketing/generation/audio/send",
+      audioGet: "/api/v1/marketing/generation/audio/:id",
+
+      // Video generation
+      video: "/api/v1/marketing/generation/video",
+    },
+
     // Posts
     posts: {
       list: "/posts",
@@ -62,6 +90,25 @@ export const config = {
     metrics: {
       list: "/metrics",
       detail: "/metrics/:id",
+      // Per-post metrics
+      postMetrics: "/api/v1/marketing/metrics/post/:postId",
+      updatePostMetrics: "/api/v1/marketing/metrics/post/:postId/update",
+
+      // Campaign metrics
+      campaign: "/api/v1/marketing/metrics/campaign/:campaignId",
+      refreshCampaign: "/api/v1/marketing/metrics/campaign/:campaignId/refresh",
+
+      // Platform fetch endpoints
+      facebookPosts: "/api/v1/marketing/metrics/facebook/posts",
+      instagramPosts: "/api/v1/marketing/metrics/instagram/posts",
+    },
+
+    // Social media (publish via socialmediaapi)
+    socialmedia: {
+      posts: {
+        facebook: "/api/v1/marketing/socialmedia/posts/facebook",
+        instagram: "/api/v1/marketing/socialmedia/posts/instagram",
+      },
     },
 
     // Cursos (desde marketing-backend)

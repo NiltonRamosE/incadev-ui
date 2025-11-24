@@ -80,6 +80,7 @@ export {
 // Posts
 export {
     createPost,
+    generateDraft,
     updatePost,
     deletePost,
     fetchPostMetrics

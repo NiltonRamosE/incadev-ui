@@ -67,7 +67,9 @@ function mapMetricFromAPI(apiMetric: MetricFromAPI): MetricForUI {
  */
 export async function createPost(post: CreatePostDTO): Promise<PostForUI> {
     try {
-        const url = `${marketingConfig.apiUrl}/api/posts`;
+        // Posts are served by the marketing backend (apiUrl). metricsApiUrl is for metrics-only endpoints.
+        const base = marketingConfig.apiUrl;
+        const url = `${base}/api/posts`;
 
         console.log('[postService] Creating post:', url);
 
@@ -92,11 +94,42 @@ export async function createPost(post: CreatePostDTO): Promise<PostForUI> {
 }
 
 /**
+ * Generate a draft (text + image) by calling the backend generator endpoint
+ */
+export async function generateDraft(prompt: string, platform: string, contentType?: string, linkUrl?: string) {
+    try {
+        const base = marketingConfig.apiUrl;
+        const url = `${base}/api/posts/generate-draft`;
+
+        const body: any = { prompt, platform };
+        if (contentType) body.content_type = contentType;
+        if (linkUrl) body.link_url = linkUrl;
+
+        const response = await authenticatedFetch(url, {
+            method: 'POST',
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.message || `HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('[postService] Error generating draft:', error);
+        throw error;
+    }
+}
+
+/**
  * Actualizar post
  */
 export async function updatePost(id: number, updates: UpdatePostDTO): Promise<PostForUI> {
     try {
-        const url = `${marketingConfig.apiUrl}/api/posts/${id}`;
+        const base = marketingConfig.apiUrl;
+        const url = `${base}/api/posts/${id}`;
 
         console.log('[postService] Updating post:', url);
 
@@ -125,7 +158,8 @@ export async function updatePost(id: number, updates: UpdatePostDTO): Promise<Po
  */
 export async function deletePost(id: number): Promise<void> {
     try {
-        const url = `${marketingConfig.apiUrl}/api/posts/${id}`;
+        const base = marketingConfig.apiUrl;
+        const url = `${base}/api/posts/${id}`;
 
         console.log('[postService] Deleting post:', url);
 

@@ -349,7 +349,6 @@ const mockTitle = "Detalle de Campaña";
                     class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white"
                 />
             </div>
-
             <!-- Plataforma y Tipo -->
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -386,6 +385,32 @@ const mockTitle = "Detalle de Campaña";
                     </select>
                 </div>
             </div>
+                        <!-- Link URL -->
+            <div>
+                <label
+                    class="block text-sm font-semibold text-gray-900 dark:text-white mb-2"
+                >
+                    URL de Enlace *
+                </label>
+                <input
+                    type="url"
+                    id="postLinkUrl"
+                    required
+                    placeholder="https://ejemplo.com/landing"
+                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white"
+                />
+            </div>
+            <!-- Generación con IA (prompt-first) -->
+            <div class="pt-4 border-t border-gray-200 dark:border-gray-800">
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Generar con IA (prompt)</label>
+                <div class="flex gap-2">
+                    <input id="postPrompt" type="text" placeholder="Describe la publicación, p.ej. Oferta 2x1 en sandalias" class="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                    <button id="btnGenerateAI" type="button" class="px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500">✨ Generar</button>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">El generador creará texto sugerido e imagen temporal que podrás revisar antes de guardar.</p>
+            </div>
+
+
 
             <!-- Contenido -->
             <div>
@@ -413,31 +438,17 @@ const mockTitle = "Detalle de Campaña";
                 <input
                     type="text"
                     id="postImagePath"
-                    required
                     placeholder="uploads/posts/mi-imagen.jpg"
                     class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white"
                 />
+                <input type="hidden" id="postImageUrl" />
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Por ahora ingresa la ruta manualmente. Próximamente con
                     Gemini AI
                 </p>
             </div>
 
-            <!-- Link URL -->
-            <div>
-                <label
-                    class="block text-sm font-semibold text-gray-900 dark:text-white mb-2"
-                >
-                    URL de Enlace *
-                </label>
-                <input
-                    type="url"
-                    id="postLinkUrl"
-                    required
-                    placeholder="https://ejemplo.com/landing"
-                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white"
-                />
-            </div>
+
 
             <!-- Estado y Fecha -->
             <div class="grid grid-cols-2 gap-4">
@@ -541,6 +552,7 @@ const mockTitle = "Detalle de Campaña";
         fetchCampaignPosts,
         fetchCampaignMetrics,
         createPost,
+        generateDraft,
         updatePost,
         deletePost,
         fetchPostMetrics,
@@ -550,7 +562,7 @@ const mockTitle = "Detalle de Campaña";
         type UpdatePostDTO,
     } from "../../../services/marketing/index";
 
-    // ============================================
+                // ============================================
     // VARIABLES GLOBALES
     // ============================================
     const mainDiv = document.querySelector("[data-campaign-id]") as HTMLElement;
@@ -1148,6 +1160,59 @@ const mockTitle = "Detalle de Campaña";
                 document.getElementById("modalPost")?.classList.add("flex");
             });
 
+        // Generar con IA (botón dentro del modal)
+        document.getElementById('btnGenerateAI')?.addEventListener('click', async () => {
+            const promptInput = document.getElementById('postPrompt') as HTMLInputElement;
+            const platformSelect = document.getElementById('postPlatform') as HTMLSelectElement;
+            const contentTypeSelect = document.getElementById('postContentType') as HTMLSelectElement;
+            if (!promptInput || !platformSelect) return;
+
+            const prompt = promptInput.value.trim();
+            const platform = platformSelect.value as 'facebook' | 'instagram';
+            const contentType = contentTypeSelect?.value as 'image' | 'video' | 'text' | undefined;
+            if (!contentType) return alert('Selecciona tipo de contenido antes de generar con IA');
+
+            // Instagram does not accept text-only posts
+            if (platform === 'instagram' && contentType === 'text') {
+                return alert('Instagram requiere una imagen o video; no es posible generar solo texto para Instagram');
+            }
+            if (!prompt) return alert('Escribe un prompt para generar');
+
+            const btn = document.getElementById('btnGenerateAI') as HTMLButtonElement;
+            btn.disabled = true;
+            const original = btn.textContent;
+            btn.textContent = 'Generando...';
+
+            try {
+                const linkInput = document.getElementById('postLinkUrl') as HTMLInputElement;
+                const linkUrl = linkInput?.value || undefined;
+                const resp = await generateDraft(prompt, platform, contentType, linkUrl);
+                if (resp?.success) {
+                    const data = resp.data ?? {}; 
+                    // Fill title/content/image fields
+                    if (data.suggested_content) {
+                        (document.getElementById('postContent') as HTMLTextAreaElement).value = data.suggested_content;
+                        // optional: fill title as first 80 chars
+                        (document.getElementById('postTitle') as HTMLInputElement).value = data.suggested_content.split('\n')[0].slice(0, 80);
+                    }
+
+                    if (data.temp_image_url) {
+                        (document.getElementById('postImageUrl') as HTMLInputElement).value = data.temp_image_url;
+                        (document.getElementById('postImagePath') as HTMLInputElement).value = data.temp_image_url;
+                    }
+
+                } else {
+                    alert('No se pudo generar el borrador: ' + (resp?.message || 'error'));
+                }
+            } catch (error) {
+                console.error('Error generating draft:', error);
+                alert('Error al generar borrador');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = original;
+            }
+        });
+
         // Cerrar modales
         [
             document.getElementById("btnCerrarModal"),
@@ -1289,6 +1354,11 @@ const mockTitle = "Detalle de Campaña";
                                     "postImagePath",
                                 ) as HTMLInputElement
                             ).value,
+                            image_url: (
+                                document.getElementById(
+                                    'postImageUrl',
+                                ) as HTMLInputElement
+                            ).value || null,
                             link_url: (
                                 document.getElementById(
                                     "postLinkUrl",
