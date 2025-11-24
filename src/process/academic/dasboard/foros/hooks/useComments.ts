@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { config } from "@/config/academic-config";
+import { config } from "@/config/support-config";
 import type { Comment, CreateCommentData } from "../types";
 
 interface UseCommentsResult {
@@ -34,7 +34,7 @@ export function useComments(token: string | null, threadId: number | null): UseC
       setError(null);
       
       const tokenWithoutQuotes = token.replace(/^"|"$/g, '');
-      const url = `${config.tutoringApiUrl}${config.endpoints.comments.listByThread.replace(':threadId', String(threadId))}`;
+      const url = `${config.apiUrl}${config.endpoints.comments.listByThread.replace(':threadId', String(threadId))}`;
       
       const response = await fetch(url, {
         method: "GET",
@@ -82,7 +82,7 @@ export function useComments(token: string | null, threadId: number | null): UseC
         throw new Error("ID de usuario no disponible");
       }
 
-      const url = `${config.tutoringApiUrl}${config.endpoints.comments.create.replace(':threadId', String(threadId))}?user_id=${userId}`;
+      const url = `${config.apiUrl}${config.endpoints.comments.create.replace(':threadId', String(threadId))}?user_id=${userId}`;
       
       const response = await fetch(url, {
         method: "POST",
@@ -113,7 +113,7 @@ export function useComments(token: string | null, threadId: number | null): UseC
 
     try {
       const tokenWithoutQuotes = token.replace(/^"|"$/g, '');
-      const url = `${config.tutoringApiUrl}${config.endpoints.comments.delete.replace(':commentId', String(commentId))}`;
+      const url = `${config.apiUrl}${config.endpoints.comments.delete.replace(':commentId', String(commentId))}`;
       
       const response = await fetch(url, {
         method: "DELETE",
