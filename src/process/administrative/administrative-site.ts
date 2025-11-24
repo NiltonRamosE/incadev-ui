@@ -112,7 +112,7 @@ export const adminNavItems: NavItem[] = [
       { title: "Empleados", url: "/administrativo/recursoshumanos/empleados" },
       { title: "Vacantes", url: "/administrativo/recursoshumanos/vacantes" },
       { title: "Postulantes", url: "/administrativo/recursoshumanos/postulantes" },
-      { title: "Gastos de Nómina", url: "/administrativo/payroll-expenses" },
+      //{ title: "Gastos de Nómina", url: "/administrativo/payroll-expenses" },
     ],
   },
 

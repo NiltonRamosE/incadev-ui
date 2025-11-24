@@ -89,6 +89,12 @@ export default function ApplicantsPage() {
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
   const [selectedApplicantApplications, setSelectedApplicantApplications] = useState<Application[]>([]);
 
+  const [isHireModalOpen, setIsHireModalOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  const [selectedRole, setSelectedRole] = useState('');
+  const [availableRoles, setAvailableRoles] = useState<{[key: string]: string}>({});
+  const [loadingRoles, setLoadingRoles] = useState(false);
+
   const { toast } = useToast();
 
   // ✅ Leer filtro automáticamente al cargar la página
@@ -110,6 +116,11 @@ export default function ApplicantsPage() {
       });
     }
   }, [toast]);
+
+  // ✅ NUEVO: Cargar roles disponibles al montar el componente
+  useEffect(() => {
+    fetchAvailableRoles();
+  }, []);
 
   useEffect(() => {
     fetchApplicants();
@@ -135,6 +146,33 @@ export default function ApplicantsPage() {
 
     setFilteredApplicants(filtered);
   }, [applicants, filters]);
+
+  const fetchAvailableRoles = async () => {
+    try {
+      setLoadingRoles(true);
+      const apiUrl = `${config.apiUrl}/api/rrhh/applicants/roles`;
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setAvailableRoles(data.roles || {});
+      }
+    } catch (error) {
+      console.error('❌ Error al cargar roles:', error);
+      toast({
+        title: "❌ Error",
+        description: 'Error al cargar roles disponibles',
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingRoles(false);
+    }
+  };
 
   const fetchApplicants = async () => {
     try {
@@ -245,13 +283,37 @@ export default function ApplicantsPage() {
     setSelectedApplicantApplications([]);
   };
 
-  const updateApplicationStatus = async (applicationId: number, status: string) => {
+  const openHireModal = (application: Application) => {
+    setSelectedApplication(application);
+    setSelectedRole('');
+    setIsHireModalOpen(true);
+  };
+
+  const closeHireModal = () => {
+    setIsHireModalOpen(false);
+    setSelectedApplication(null);
+    setSelectedRole('');
+  };
+
+  const handleHire = async () => {
+    if (!selectedApplication || !selectedRole) {
+      toast({
+        title: "❌ Error",
+        description: 'Debe seleccionar un rol para contratar',
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
-      const apiUrl = `${config.apiUrl}/api/rrhh/applicants/applications/${applicationId}/status`;
+      const apiUrl = `${config.apiUrl}/api/rrhh/applicants/applications/${selectedApplication.id}/status`;
       const response = await fetch(apiUrl, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ 
+          status: 'hired',
+          role: selectedRole 
+        })
       });
       
       const result = await response.json();
@@ -261,24 +323,68 @@ export default function ApplicantsPage() {
         await fetchApplicants();
         toast({
           title: "✅ Éxito",
-          description: status === 'hired' 
-            ? "Postulante contratado y usuario creado automáticamente" 
-            : "Estado de aplicación actualizado",
+          description: result.message || "Postulante contratado y usuario creado automáticamente",
         });
+        closeHireModal();
       } else {
         toast({
           title: "❌ Error",
-          description: result.error || 'Error al actualizar estado',
+          description: result.error || 'Error al contratar postulante',
           variant: "destructive",
         });
       }
     } catch (error) {
-      console.error('Error al actualizar estado:', error);
+      console.error('Error al contratar postulante:', error);
       toast({
         title: "❌ Error",
-        description: 'Error al actualizar estado',
+        description: 'Error al contratar postulante',
         variant: "destructive",
       });
+    }
+  };
+
+  const updateApplicationStatus = async (applicationId: number, status: string) => {
+    // Si es rechazar, usar la función existente
+    if (status === 'rejected') {
+      try {
+        const apiUrl = `${config.apiUrl}/api/rrhh/applicants/applications/${applicationId}/status`;
+        const response = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          await fetchApplicantApplications(selectedApplicant!.id);
+          await fetchApplicants();
+          toast({
+            title: "✅ Éxito",
+            description: result.message || "Estado de aplicación actualizado",
+          });
+        } else {
+          toast({
+            title: "❌ Error",
+            description: result.error || 'Error al actualizar estado',
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error('Error al actualizar estado:', error);
+        toast({
+          title: "❌ Error",
+          description: 'Error al actualizar estado',
+          variant: "destructive",
+        });
+      }
+    }
+    // Si es contratar, abrir el modal de selección de rol
+    else if (status === 'hired') {
+      const application = selectedApplicantApplications.find(app => app.id === applicationId);
+      if (application) {
+        openHireModal(application);
+      }
     }
   };
 
@@ -781,6 +887,67 @@ export default function ApplicantsPage() {
                     </div>
                   )}
 
+                </DialogContent>
+              </Dialog>
+
+              {/* ✅ NUEVO: Modal para Contratar y Seleccionar Rol */}
+              <Dialog open={isHireModalOpen} onOpenChange={closeHireModal}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Contratar Postulante</DialogTitle>
+                    <DialogDescription>
+                      Seleccione el rol que tendrá el usuario en el sistema
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="role">Rol del Usuario</Label>
+                      <Select value={selectedRole} onValueChange={setSelectedRole}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione un rol" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {loadingRoles ? (
+                            <SelectItem value="loading" disabled>
+                              Cargando roles...
+                            </SelectItem>
+                          ) : (
+                            Object.entries(availableRoles).map(([key, label]) => (
+                              <SelectItem key={key} value={key}>
+                                {label}
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Se creará un usuario automáticamente con este rol
+                      </p>
+                    </div>
+
+                    {selectedApplication && (
+                      <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                        <p className="text-sm font-medium">{selectedApplicant?.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {selectedApplication.offer?.title || 'Oferta no disponible'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={closeHireModal}>
+                      Cancelar
+                    </Button>
+                    <Button 
+                      onClick={handleHire} 
+                      disabled={!selectedRole || loadingRoles}
+                    >
+                      <CheckCircle className="h-4 w-4 mr-1" />
+                      Contratar
+                    </Button>
+                  </div>
                 </DialogContent>
               </Dialog>
 
