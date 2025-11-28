@@ -662,7 +662,7 @@ const mockTitle = `${versionName} - INCADEV UI`;
 
       if (!container || !emptyState) return;
 
-      if (data.campañas.length === 0) {
+      if (data.campanas.length === 0) {
         container.classList.add("hidden");
         emptyState.classList.remove("hidden");
         return;
@@ -671,7 +671,7 @@ const mockTitle = `${versionName} - INCADEV UI`;
       container.classList.remove("hidden");
       emptyState.classList.add("hidden");
 
-      container.innerHTML = data.campañas
+      container.innerHTML = data.campanas
         .map((c) => {
           return `
           <div class="p-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl hover:shadow-lg smooth-transition group">
@@ -731,7 +731,7 @@ const mockTitle = `${versionName} - INCADEV UI`;
       let totalPosts = 0;
       let sumCtr = 0;
 
-      data.campañas.forEach((c) => {
+      data.campanas.forEach((c) => {
         totalReach += c.metricas.totalReach;
         totalInteractions += c.metricas.totalInteractions;
         totalPosts += c.metricas.totalPosts;
@@ -739,7 +739,7 @@ const mockTitle = `${versionName} - INCADEV UI`;
       });
 
       const avgCtr =
-        data.campañas.length > 0 ? sumCtr / data.campañas.length : 0;
+        data.campanas.length > 0 ? sumCtr / data.campanas.length : 0;
 
       // Quick Metrics
       const quickMetrics = document.getElementById("quickMetrics");
@@ -751,7 +751,7 @@ const mockTitle = `${versionName} - INCADEV UI`;
           </div>
           <div class="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
             <p class="text-sm text-gray-600 dark:text-gray-400">Campañas</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">${data.totalCampañas}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">${data.totalCampanas}</p>
           </div>
           <div class="text-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
             <p class="text-sm text-gray-600 dark:text-gray-400">Alcance Total</p>
@@ -785,7 +785,7 @@ const mockTitle = `${versionName} - INCADEV UI`;
       if (metricaInteracciones)
         metricaInteracciones.textContent = String(totalInteractions);
       if (metricaTotalCampanas)
-        metricaTotalCampanas.textContent = String(data.totalCampañas);
+        metricaTotalCampanas.textContent = String(data.totalCampanas);
       if (metricaTotalPosts) metricaTotalPosts.textContent = String(totalPosts);
       if (metricaPrecio)
         metricaPrecio.textContent = `S/ ${version.precio.toFixed(2)}`;
