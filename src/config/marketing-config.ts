@@ -4,13 +4,13 @@
  */
 
 export const config = {
-  apiUrl:"https://instituto.cetivirgendelapuerta.com/backend/marketing/public/api",
+  apiUrl: "https://instituto.cetivirgendelapuerta.com/backend/marketing/public/api",
   //apiUrl: "http://127.0.0.1:8002",
   // Marketing backend auth and related services
   //authApiUrl: "http://127.0.0.1:8001/api", // Backend principal para autenticación
   // Explicit base URLs for related microservices so the UI can target the right hosts
-  //generationApiUrl: "http://127.0.0.1:8004", // generativeapi
-  //socialApiUrl: "http://127.0.0.1:8005", // socialmediaapi
+  generationApiUrl: "http://127.0.0.1:8004/api", // generativeapi
+  socialApiUrl: "http://127.0.0.1:8005/api", // socialmediaapi
   //metricsApiUrl: "http://127.0.0.1:8006", // metricsapi (same host used for auth/service)
   environment: "development",
 
@@ -33,7 +33,7 @@ export const config = {
 
     // Campaigns
     campaigns: {
-      list: "/campaigns",              // GET con ?proposal_id=X
+      list: "/campaigns",              // GET
       create: "/campaigns",            // POST
       detail: "/campaigns/:id",        // GET
       update: "/campaigns/:id",        // PUT
@@ -55,26 +55,26 @@ export const config = {
     },
 
     // Generative content (microservice: generativeapi)
-    // Base prefix used by the backend is `/api/v1/marketing/generation`
+    // Base prefix used by the backend is `/generation`
     generation: {
-      facebook: "/api/v1/marketing/generation/facebook",
-      instagram: "/api/v1/marketing/generation/instagram",
-      podcast: "/api/v1/marketing/generation/podcast",
+      facebook: "/generation/facebook",
+      instagram: "/generation/instagram",
+      podcast: "/generation/podcast",
 
       // Image endpoints
-      image: "/api/v1/marketing/generation/image",
-      imageList: "/api/v1/marketing/generation/image/list",
-      imageSend: "/api/v1/marketing/generation/image/send",
-      imageGet: "/api/v1/marketing/generation/image/:id",
+      image: "/generation/image",
+      imageList: "/generation/image/list",
+      imageSend: "/generation/image/send",
+      imageGet: "/generation/image/:id",
 
       // Audio endpoints
-      audio: "/api/v1/marketing/generation/audio",
-      audioList: "/api/v1/marketing/generation/audio/list",
-      audioSend: "/api/v1/marketing/generation/audio/send",
-      audioGet: "/api/v1/marketing/generation/audio/:id",
+      audio: "/generation/audio",
+      audioList: "/generation/audio/list",
+      audioSend: "/generation/audio/send",
+      audioGet: "/generation/audio/:id",
 
       // Video generation
-      video: "/api/v1/marketing/generation/video",
+      video: "/generation/video",
     },
 
     // Posts
@@ -91,23 +91,23 @@ export const config = {
       list: "/metrics",
       detail: "/metrics/:id",
       // Per-post metrics
-      postMetrics: "/api/v1/marketing/metrics/post/:postId",
-      updatePostMetrics: "/api/v1/marketing/metrics/post/:postId/update",
+      postMetrics: "/metrics/post/:postId",
+      updatePostMetrics: "/metrics/post/:postId/update",
 
       // Campaign metrics
-      campaign: "/api/v1/marketing/metrics/campaign/:campaignId",
-      refreshCampaign: "/api/v1/marketing/metrics/campaign/:campaignId/refresh",
+      campaign: "/metrics/campaign/:campaignId",
+      refreshCampaign: "/metrics/campaign/:campaignId/refresh",
 
       // Platform fetch endpoints
-      facebookPosts: "/api/v1/marketing/metrics/facebook/posts",
-      instagramPosts: "/api/v1/marketing/metrics/instagram/posts",
+      facebookPosts: "/metrics/facebook/posts",
+      instagramPosts: "/metrics/instagram/posts",
     },
 
     // Social media (publish via socialmediaapi)
     socialmedia: {
       posts: {
-        facebook: "/api/v1/marketing/socialmedia/posts/facebook",
-        instagram: "/api/v1/marketing/socialmedia/posts/instagram",
+        facebook: "/socialmedia/posts/facebook",
+        instagram: "/socialmedia/posts/instagram",
       },
     },
 
@@ -120,6 +120,11 @@ export const config = {
       campaigns: "/courses/:id/campaigns",
     },
 
+    versions: {
+      list: "/versions",
+      detail: "/versions/:id",
+      campaigns: "/versions/:id/campaigns",
+    },
 
     // Alumnos (desde marketing-backend usando modelos de core-domain)
     alumnos: {

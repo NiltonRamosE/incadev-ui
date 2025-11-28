@@ -69,7 +69,7 @@ export async function createPost(post: CreatePostDTO): Promise<PostForUI> {
     try {
         // Posts are served by the marketing backend (apiUrl). metricsApiUrl is for metrics-only endpoints.
         const base = marketingConfig.apiUrl;
-        const url = `${base}/api/posts`;
+        const url = `${base}/posts`;
 
         console.log('[postService] Creating post:', url);
 
@@ -99,7 +99,7 @@ export async function createPost(post: CreatePostDTO): Promise<PostForUI> {
 export async function generateDraft(prompt: string, platform: string, contentType?: string, linkUrl?: string) {
     try {
         const base = marketingConfig.apiUrl;
-        const url = `${base}/api/posts/generate-draft`;
+        const url = `${base}/posts/generate-draft`;
 
         const body: any = { prompt, platform };
         if (contentType) body.content_type = contentType;
@@ -129,7 +129,7 @@ export async function generateDraft(prompt: string, platform: string, contentTyp
 export async function updatePost(id: number, updates: UpdatePostDTO): Promise<PostForUI> {
     try {
         const base = marketingConfig.apiUrl;
-        const url = `${base}/api/posts/${id}`;
+        const url = `${base}/posts/${id}`;
 
         console.log('[postService] Updating post:', url);
 
@@ -159,7 +159,7 @@ export async function updatePost(id: number, updates: UpdatePostDTO): Promise<Po
 export async function deletePost(id: number): Promise<void> {
     try {
         const base = marketingConfig.apiUrl;
-        const url = `${base}/api/posts/${id}`;
+        const url = `${base}/posts/${id}`;
 
         console.log('[postService] Deleting post:', url);
 
@@ -184,7 +184,7 @@ export async function deletePost(id: number): Promise<void> {
 export async function publishPost(id: number): Promise<PostForUI> {
     try {
         const base = marketingConfig.apiUrl;
-        const url = `${base}/api/posts/${id}/publish`;
+        const url = `${base}/posts/${id}/publish`;
 
         console.log('[postService] Publishing post:', url);
 
