@@ -10,7 +10,7 @@ export const config = {
   //authApiUrl: "http://127.0.0.1:8001/api", // Backend principal para autenticación
   // Explicit base URLs for related microservices so the UI can target the right hosts
   generationApiUrl: "http://127.0.0.1:8004/api", // generativeapi
-  //socialApiUrl: "http://127.0.0.1:8005", // socialmediaapi
+  socialApiUrl: "http://127.0.0.1:8005/api", // socialmediaapi
   //metricsApiUrl: "http://127.0.0.1:8006", // metricsapi (same host used for auth/service)
   environment: "development",
 

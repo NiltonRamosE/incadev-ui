@@ -712,10 +712,19 @@ const { campaignId, campaignName } = Astro.props;
                                     <div class="p-4">
                                         <p
                                             id="previewContent"
-                                            class="text-gray-900 dark:text-white text-sm whitespace-pre-wrap"
+                                            class="text-gray-900 dark:text-white text-sm whitespace-pre-wrap mb-3"
                                         >
                                             El contenido aparecerá aquí...
                                         </p>
+                                    </div>
+                                    <!-- ✅ AGREGAR: Contenedor de imagen Facebook -->
+                                    <div id="previewImageFB" class="hidden">
+                                        <img
+                                            id="previewImageFBImg"
+                                            src=""
+                                            alt="Preview"
+                                            class="w-full h-auto"
+                                        />
                                     </div>
                                     <div
                                         class="px-4 py-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-around text-gray-500 text-sm"
@@ -725,7 +734,6 @@ const { campaignId, campaignName } = Astro.props;
                                         <span>↗️ Compartir</span>
                                     </div>
                                 </div>
-
                                 <!-- Instagram Preview -->
                                 <div
                                     id="instagramPreview"
@@ -749,10 +757,21 @@ const { campaignId, campaignName } = Astro.props;
                                             incadev_oficial
                                         </p>
                                     </div>
+                                    <!-- ✅ MODIFICAR: Contenedor de imagen Instagram -->
                                     <div
+                                        id="previewImageIG"
                                         class="aspect-square bg-gray-200 dark:bg-gray-800 flex items-center justify-center"
                                     >
-                                        <span class="text-4xl">🖼️</span>
+                                        <img
+                                            id="previewImageIGImg"
+                                            src=""
+                                            alt="Preview"
+                                            class="hidden w-full h-full object-cover"
+                                        />
+                                        <span
+                                            id="previewImageIGPlaceholder"
+                                            class="text-4xl">🖼️</span
+                                        >
                                     </div>
                                     <div
                                         class="p-3 flex items-center justify-between"
@@ -894,6 +913,10 @@ const { campaignId, campaignName } = Astro.props;
             type CreatePostDTO,
             type UpdatePostDTO,
         } from "../../../services/marketing/index";
+        import {
+            generateText,
+            generateImage,
+        } from "../../../services/marketing/generationService";
         import { config } from "../../../config/marketing-config";
 
         // ============================================
@@ -958,62 +981,6 @@ const { campaignId, campaignName } = Astro.props;
                 }>;
             };
             body?: string;
-        }
-
-        async function generateTextWithAI(
-            prompt: string,
-            platform: "facebook" | "instagram",
-            tone: string = "professional",
-        ): Promise<{ success: boolean; text?: string; error?: string }> {
-            try {
-                const baseUrl =
-                    config.generationApiUrl || "http://127.0.0.1:8004";
-                const endpoint =
-                    platform === "facebook"
-                        ? "/generation/facebook"
-                        : "/generation/instagram";
-
-                const response = await fetch(`${baseUrl}${endpoint}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                    },
-                    body: JSON.stringify({
-                        prompt,
-                        tone,
-                        length: platform === "instagram" ? "short" : "medium",
-                    }),
-                });
-
-                if (!response.ok)
-                    throw new Error(`HTTP error! status: ${response.status}`);
-
-                const data: GenerateTextResponse = await response.json();
-
-                if (
-                    data.success &&
-                    data.payload?.candidates?.[0]?.content?.parts?.[0]?.text
-                ) {
-                    return {
-                        success: true,
-                        text: data.payload.candidates[0].content.parts[0].text,
-                    };
-                }
-
-                return {
-                    success: false,
-                    error: data.body || "No se pudo generar",
-                };
-            } catch (error) {
-                return {
-                    success: false,
-                    error:
-                        error instanceof Error
-                            ? error.message
-                            : "Error de conexión",
-                };
-            }
         }
 
         // ============================================
@@ -1174,10 +1141,61 @@ const { campaignId, campaignName } = Astro.props;
             const content =
                 (document.getElementById("postContent") as HTMLTextAreaElement)
                     .value || "El contenido aparecerá aquí...";
+
+            // Actualizar texto en ambos previews
             document.getElementById("previewContent")!.textContent = content;
             document.getElementById("previewContentIG")!.textContent = content;
             document.getElementById("charCount")!.textContent =
                 `${content.length} caracteres`;
+
+            // ✅ AGREGAR: Actualizar imagen en previews
+            const imageUrl = (
+                document.getElementById("postImageUrl") as HTMLInputElement
+            ).value;
+
+            if (imageUrl) {
+                // Facebook preview
+                const fbImageContainer =
+                    document.getElementById("previewImageFB");
+                const fbImage = document.getElementById(
+                    "previewImageFBImg",
+                ) as HTMLImageElement;
+                if (fbImageContainer && fbImage) {
+                    fbImage.src = imageUrl;
+                    fbImageContainer.classList.remove("hidden");
+                }
+
+                // Instagram preview
+                const igImage = document.getElementById(
+                    "previewImageIGImg",
+                ) as HTMLImageElement;
+                const igPlaceholder = document.getElementById(
+                    "previewImageIGPlaceholder",
+                );
+                if (igImage && igPlaceholder) {
+                    igImage.src = imageUrl;
+                    igImage.classList.remove("hidden");
+                    igPlaceholder.classList.add("hidden");
+                }
+            } else {
+                // Si no hay imagen, ocultar/mostrar placeholders
+                const fbImageContainer =
+                    document.getElementById("previewImageFB");
+                if (fbImageContainer) {
+                    fbImageContainer.classList.add("hidden");
+                }
+
+                const igImage = document.getElementById(
+                    "previewImageIGImg",
+                ) as HTMLImageElement;
+                const igPlaceholder = document.getElementById(
+                    "previewImageIGPlaceholder",
+                );
+                if (igImage && igPlaceholder) {
+                    igImage.classList.add("hidden");
+                    igPlaceholder.classList.remove("hidden");
+                }
+            }
         }
 
         function updatePreviewPlatform() {
@@ -1481,6 +1499,7 @@ const { campaignId, campaignName } = Astro.props;
                             "postPrompt",
                         ) as HTMLTextAreaElement
                     ).value.trim();
+
                     if (!prompt) {
                         showToast("Escribe una descripción", "warning");
                         return;
@@ -1505,35 +1524,116 @@ const { campaignId, campaignName } = Astro.props;
                                 "promptTone",
                             ) as HTMLSelectElement
                         ).value;
-                        const result = await generateTextWithAI(
-                            prompt,
-                            selectedPlatform,
-                            tone,
-                        );
 
-                        if (result.success && result.text) {
-                            (
-                                document.getElementById(
-                                    "postContent",
-                                ) as HTMLTextAreaElement
-                            ).value = result.text;
-                            const firstLine = result.text
-                                .split("\n")[0]
-                                .replace(/[📘📷🎓✨🚀💡❤️🔥⭐#]/g, "")
-                                .trim();
-                            (
-                                document.getElementById(
-                                    "postTitle",
-                                ) as HTMLInputElement
-                            ).value = firstLine.slice(0, 80);
-                            updatePreview();
-                            goToStep(2);
-                            showToast("¡Contenido generado!", "success");
-                        } else {
-                            showToast(
-                                result.error || "Error al generar",
-                                "error",
+                        // ✅ NUEVO: Decidir qué generar según el tipo de contenido
+                        if (selectedContentType === "image") {
+                            // Generar TEXTO + IMAGEN
+                            const result = await generateImage(
+                                prompt,
+                                selectedPlatform,
+                                tone,
+                                {
+                                    aspectRatio:
+                                        selectedPlatform === "instagram"
+                                            ? "1:1"
+                                            : "16:9",
+                                    numberOfImages: 1,
+                                },
                             );
+
+                            if (
+                                result.success &&
+                                result.text &&
+                                result.imageUrl
+                            ) {
+                                // Llenar el textarea con el texto
+                                (
+                                    document.getElementById(
+                                        "postContent",
+                                    ) as HTMLTextAreaElement
+                                ).value = result.text;
+
+                                // Guardar la URL de la imagen
+                                (
+                                    document.getElementById(
+                                        "postImageUrl",
+                                    ) as HTMLInputElement
+                                ).value = result.imageUrl || "";
+                                (
+                                    document.getElementById(
+                                        "postImagePath",
+                                    ) as HTMLInputElement
+                                ).value = result.imageUrl || "";
+
+                                // Extraer primera línea para el título
+                                const firstLine = result.text
+                                    .split("\n")[0]
+                                    .replace(/[📘📷🎓✨🚀💡❤️🔥⭐#]/g, "")
+                                    .trim();
+                                (
+                                    document.getElementById(
+                                        "postTitle",
+                                    ) as HTMLInputElement
+                                ).value = firstLine.slice(0, 80);
+
+                                // ✅ Mostrar la imagen en el preview
+                                const imagePreviewContainer =
+                                    document.querySelector(
+                                        ".p-6.rounded-xl.border-2.border-dashed",
+                                    ) as HTMLElement;
+                                if (imagePreviewContainer && result.imageUrl) {
+                                    imagePreviewContainer.innerHTML = `
+                            <img src="${result.imageUrl}" alt="Imagen generada" class="w-full h-auto rounded-lg" />
+                            <p class="text-xs text-green-600 mt-2">✅ Imagen generada exitosamente</p>
+                        `;
+                                }
+
+                                updatePreview();
+                                goToStep(2);
+                                showToast(
+                                    "¡Contenido e imagen generados!",
+                                    "success",
+                                );
+                            } else {
+                                showToast(
+                                    result.error || "Error al generar",
+                                    "error",
+                                );
+                            }
+                        } else {
+                            // Generar solo TEXTO (video o text)
+                            const result = await generateText(
+                                prompt,
+                                selectedPlatform,
+                                tone,
+                            );
+
+                            if (result.success && result.text) {
+                                (
+                                    document.getElementById(
+                                        "postContent",
+                                    ) as HTMLTextAreaElement
+                                ).value = result.text;
+
+                                const firstLine = result.text
+                                    .split("\n")[0]
+                                    .replace(/[📘📷🎓✨🚀💡❤️🔥⭐#]/g, "")
+                                    .trim();
+                                (
+                                    document.getElementById(
+                                        "postTitle",
+                                    ) as HTMLInputElement
+                                ).value = firstLine.slice(0, 80);
+
+                                updatePreview();
+                                goToStep(2);
+                                showToast("¡Contenido generado!", "success");
+                            } else {
+                                showToast(
+                                    result.error || "Error al generar",
+                                    "error",
+                                );
+                            }
                         }
                     } catch (error) {
                         showToast("Error de conexión", "error");
