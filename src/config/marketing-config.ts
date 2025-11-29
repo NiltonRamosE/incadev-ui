@@ -5,7 +5,7 @@
 
 export const config = {
   apiUrl: "https://instituto.cetivirgendelapuerta.com/backend/marketing/public/api",
-  //apiUrl: "http://127.0.0.1:8002",
+  //apiUrl: "http://127.0.0.1:8000/api",
   // Marketing backend auth and related services
   //authApiUrl: "http://127.0.0.1:8001/api", // Backend principal para autenticación
   // Explicit base URLs for related microservices so the UI can target the right hosts

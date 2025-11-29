@@ -225,22 +225,14 @@ export default function AlumnosResumen() {
               </div>
             </div>
 
-            {/* Alertas si hay alumnos en riesgo */}
+            {/* Alertas si hay alumnos en riesgo 
             {(insights.alumnosConBajaAsistencia > 0 || insights.alumnosEnRiesgo > 0) && (
               <div className="mt-3 p-2.5 bg-orange-50 dark:bg-orange-950/20 rounded-lg border border-orange-200 dark:border-orange-900/30">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-orange-600 dark:bg-orange-400 rounded-full animate-pulse"></div>
-                  <p className="text-xs text-orange-700 dark:text-orange-400 font-medium">
-                    {insights.alumnosConBajaAsistencia > 0 && insights.alumnosEnRiesgo > 0
-                      ? `${insights.alumnosConBajaAsistencia + insights.alumnosEnRiesgo} alumnos necesitan atención`
-                      : insights.alumnosConBajaAsistencia > 0
-                        ? `${insights.alumnosConBajaAsistencia} alumnos con baja asistencia`
-                        : `${insights.alumnosEnRiesgo} alumnos en riesgo académico`
-                    }
-                  </p>
                 </div>
               </div>
-            )}
+            )}*/}
           </div>
         )}
 

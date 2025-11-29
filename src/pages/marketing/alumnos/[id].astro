@@ -706,26 +706,15 @@ const mockTitle = `${alumnoNombre} - INCADEV UI`;
           tareasDetalle.textContent = `${resumenRend.tareasEntregadas || 0} / ${resumenRend.tareasTotales || 0} tareas entregadas`;
       }
 
-      // Engagement Score: calcular con asistencia + notas + tareas
-      let engagementScore = 0;
-      if (alumno.asistencias && alumno.asistencias.resumen && alumno.rendimiento && alumno.rendimiento.resumen) {
-        const resumenAsist = alumno.asistencias.resumen;
-        const resumenRend = alumno.rendimiento.resumen;
-
-        const porcentajeAsistencia = resumenAsist.porcentaje || 0;
-        const promedioNotas = resumenRend.promedioNotas || 0;
-        const porcentajeTareas = resumenRend.tareasTotales > 0
-          ? (resumenRend.tareasEntregadas / resumenRend.tareasTotales) * 100
-          : 0;
-
-        // Normalizar promedio de notas a escala 0-100 (asumiendo escala vigesimal 0-20)
-        const notasNormalizadas = (promedioNotas / 20) * 100;
-
-        engagementScore = (porcentajeAsistencia * 0.4) + (notasNormalizadas * 0.4) + (porcentajeTareas * 0.2);
-      }
+      // Engagement Score: usar solo el valor del backend (0-10) y mostrarlo en 0-100
+      const backendEngagement = alumnoInfo.engagementScore ?? 0;
+      // Ya viene escalado a 0-100 desde el mapper; no volver a multiplicar
+      let engagementScore = backendEngagement || 0;
 
       const engagementScoreEl = document.getElementById("engagementScore");
       const engagementBar = document.getElementById("engagementBar");
+
+      engagementScore = engagementScore ?? 0;
 
       if (engagementScoreEl)
         engagementScoreEl.textContent = `${Math.round(engagementScore)}/100`;
