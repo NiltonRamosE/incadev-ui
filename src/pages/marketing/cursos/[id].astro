@@ -6,7 +6,6 @@ import { config } from "../../../config/marketing-config";
 // ============================================
 // getStaticPaths - Pre-genera páginas estáticas
 // ============================================
-
 export async function getStaticPaths() {
   try {
     // Fetch all versions at build time
@@ -365,7 +364,6 @@ const mockTitle = `${versionName} - INCADEV UI`;
             </div>
           </div>
         </div>
-
         <!-- Tab Content: Métricas Académicas -->
         <div id="tab-academico" class="tab-content hidden p-6">
           <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
@@ -509,7 +507,9 @@ const mockTitle = `${versionName} - INCADEV UI`;
               Estado de Estudiantes
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div class="text-center p-3 bg-red-50 dark:bg-red-950/20 rounded-lg">
+              <div
+                class="text-center p-3 bg-red-50 dark:bg-red-950/20 rounded-lg"
+              >
                 <p
                   id="acadReprobados"
                   class="text-2xl font-bold text-red-600 dark:text-red-400"
@@ -520,7 +520,9 @@ const mockTitle = `${versionName} - INCADEV UI`;
                   Reprobados
                 </p>
               </div>
-              <div class="text-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
+              <div
+                class="text-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg"
+              >
                 <p
                   id="acadDesertores"
                   class="text-2xl font-bold text-orange-600 dark:text-orange-400"
@@ -531,7 +533,9 @@ const mockTitle = `${versionName} - INCADEV UI`;
                   Desertores
                 </p>
               </div>
-              <div class="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+              <div
+                class="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg"
+              >
                 <p
                   id="acadTasaRetencion"
                   class="text-2xl font-bold text-blue-600 dark:text-blue-400"
@@ -542,7 +546,9 @@ const mockTitle = `${versionName} - INCADEV UI`;
                   Retención
                 </p>
               </div>
-              <div class="text-center p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
+              <div
+                class="text-center p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg"
+              >
                 <p
                   id="acadTasaGraduacion"
                   class="text-2xl font-bold text-purple-600 dark:text-purple-400"
@@ -816,9 +822,7 @@ const mockTitle = `${versionName} - INCADEV UI`;
       return `<span class="px-2 py-1 ${config.bg} ${config.text} rounded text-xs font-medium">${config.label}</span>`;
     }
 
-    function renderMetricasAcademicas(
-      metricas?: MetricasEstudiantesForUI,
-    ) {
+    function renderMetricasAcademicas(metricas?: MetricasEstudiantesForUI) {
       const setText = (id: string, value: string) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
@@ -878,7 +882,7 @@ const mockTitle = `${versionName} - INCADEV UI`;
           </div>
           <div>
             <p class="font-semibold">Total de asistencias</p>
-            <p>${a.esperadas}</p>
+            <p>${a.totalAsistencias}</p>
           </div>
           <div>
             <p class="font-semibold">Presentes</p>
@@ -952,7 +956,6 @@ const mockTitle = `${versionName} - INCADEV UI`;
           </div>
         `;
       }
-
       renderMetricasAcademicas(version.metricasEstudiantes);
     }
 

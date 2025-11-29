@@ -108,7 +108,7 @@ export interface AsistenciasDetalleFromAPI {
 export interface AsistenciasDetalleForUI {
     totalClases: number;
     totalEstudiantes: number;
-    esperadas: number;
+    totalAsistencias: number;
     presentes: number;
     tardanzas: number;
     ausentes: number;
