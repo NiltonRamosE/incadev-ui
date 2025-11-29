@@ -130,6 +130,8 @@ export const config = {
     alumnos: {
       stats: "/alumnos/stats",
       resumen: "/alumnos/resumen",
+      detalle: "/alumnos/:id/detalle",
+
     },
   },
 

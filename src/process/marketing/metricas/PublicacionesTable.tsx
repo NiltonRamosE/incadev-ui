@@ -271,7 +271,7 @@ export default function PublicacionesTable() {
                       </div>
                     )}
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => window.location.href = `/marketing/campañas/${pub.campaignId}`}>
+                  <Button variant="outline" size="sm" onClick={() => window.location.href = `/marketing/campaigns/${pub.campaignId}`}>
                     Ver campaña
                   </Button>
                 </div>

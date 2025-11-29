@@ -30,7 +30,7 @@ const { campaignId, campaignName } = Astro.props;
         <div class="flex items-center justify-between gap-4 mb-6">
             <div class="flex items-center gap-4">
                 <a
-                    href="/marketing/campañas"
+                    href="/marketing/campaigns"
                     class="p-2 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg transition-all"
                     >← Volver</a
                 >
@@ -1317,7 +1317,7 @@ const { campaignId, campaignName } = Astro.props;
             } catch (error) {
                 console.error("Error loading:", error);
                 alert("Error al cargar la campaña");
-                window.location.href = "/marketing/campañas";
+                window.location.href = "/marketing/campaigns";
             }
         }
 

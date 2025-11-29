@@ -192,7 +192,7 @@ export async function deletePost(id: number): Promise<void> {
  */
 export async function publishPost(id: number): Promise<PostForUI> {
     try {
-        const base = marketingConfig.apiUrl;
+        const base = marketingConfig.socialApiUrl;
         const url = `${base}/posts/${id}/publish`;
 
         console.log('[postService] Publishing post:', url);

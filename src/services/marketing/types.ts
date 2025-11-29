@@ -94,6 +94,53 @@ export interface UpdateProposalDTO {
 // COURSES
 // ============================================
 
+export interface AsistenciasDetalleFromAPI {
+    total_clases: number;
+    total_estudiantes: number;
+    esperadas: number;
+    presentes: number;
+    tardanzas: number;
+    ausentes: number;
+    justificados: number;
+    porcentaje: number;
+}
+
+export interface AsistenciasDetalleForUI {
+    totalClases: number;
+    totalEstudiantes: number;
+    totalAsistencias: number;
+    presentes: number;
+    tardanzas: number;
+    ausentes: number;
+    justificados: number;
+    porcentaje: number;
+}
+
+export interface MetricasEstudiantesFromAPI {
+    total_matriculados: number;
+    activos: number;
+    completados: number;
+    reprobados: number;
+    desertores: number;
+    egresados?: number;
+    promedio_asistencia: number;
+    promedio_notas: number;
+    tasa_retencion: number;
+    tasa_graduacion: number;
+    asistencias?: AsistenciasDetalleFromAPI;
+}
+
+export interface GrupoActivoFromAPI {
+    grupo_id: number;
+    nombre: string;
+    version: string;
+    estudiantes: number;
+    promedio_asistencia: number;
+    progreso: number;
+    total_clases: number;
+    clases_realizadas: number;
+}
+
 export interface CourseFromAPI {
     id: number;
     name: string;
@@ -101,6 +148,33 @@ export interface CourseFromAPI {
     image_path: string | null;
     created_at: string;
     updated_at: string;
+    metricas_estudiantes?: MetricasEstudiantesFromAPI;
+    grupos_activos?: GrupoActivoFromAPI[];
+}
+
+export interface MetricasEstudiantesForUI {
+    totalMatriculados: number;
+    activos: number;
+    completados: number;
+    reprobados: number;
+    desertores: number;
+    egresados?: number;
+    promedioAsistencia: number;
+    promedioNotas: number;
+    tasaRetencion: number;
+    tasaGraduacion: number;
+    asistencias?: AsistenciasDetalleForUI;
+}
+
+export interface GrupoActivoForUI {
+    grupoId: number;
+    nombre: string;
+    version: string;
+    estudiantes: number;
+    promedioAsistencia: number;
+    progreso: number;
+    totalClases: number;
+    clasesRealizadas: number;
 }
 
 export interface CourseForUI {
@@ -110,6 +184,8 @@ export interface CourseForUI {
     imagen: string | null;
     fechaCreacion: string;
     fechaActualizacion: string;
+    metricasEstudiantes?: MetricasEstudiantesForUI;
+    gruposActivos?: GrupoActivoForUI[];
 }
 
 // ============================================
@@ -126,6 +202,8 @@ export interface CourseVersionFromAPI {
     created_at: string;
     updated_at: string;
     course: CourseFromAPI;
+    metricas_estudiantes?: MetricasEstudiantesFromAPI;
+    grupos_activos?: GrupoActivoFromAPI[];
 }
 
 export interface CourseVersionForUI {
@@ -140,6 +218,8 @@ export interface CourseVersionForUI {
     estado: 'draft' | 'published' | 'archived';
     fechaCreacion: string;
     fechaActualizacion: string;
+    metricasEstudiantes?: MetricasEstudiantesForUI;
+    gruposActivos?: GrupoActivoForUI[];
 }
 
 // ============================================
@@ -410,7 +490,7 @@ export interface CourseDetailForUI {
 }
 
 // ============================================
-// COURSE CAMPAIGNS (campañas relacionadas a un curso)
+// COURSE CAMPAIGNS (campanas relacionadas a un curso)
 // ============================================
 
 export interface CampaignWithMetricsFromAPI {
@@ -443,6 +523,8 @@ export interface CourseCampaignsFromAPI {
     total_versions: number;
     total_campaigns: number;
     campaigns: CampaignWithMetricsFromAPI[];
+    metricas_estudiantes?: MetricasEstudiantesFromAPI;
+    grupos_activos?: GrupoActivoFromAPI[];
 }
 
 export interface CampaignWithMetricsForUI {
@@ -472,8 +554,10 @@ export interface CourseCampaignsForUI {
         descripcion: string;
     };
     totalVersiones: number;
-    totalCampañas: number;
-    campañas: CampaignWithMetricsForUI[];
+    totalCampanas: number;
+    campanas: CampaignWithMetricsForUI[];
+    metricasEstudiantes?: MetricasEstudiantesForUI;
+    gruposActivos?: GrupoActivoForUI[];
 }
 
 // ============================================
@@ -491,6 +575,8 @@ export interface VersionDetailFromAPI {
     updated_at: string;
     course: CourseFromAPI;
     campaigns: CampaignWithMetricsFromAPI[];
+    metricas_estudiantes?: MetricasEstudiantesFromAPI;
+    grupos_activos?: GrupoActivoFromAPI[];
 }
 
 export interface VersionDetailForUI {
@@ -505,11 +591,13 @@ export interface VersionDetailForUI {
     estado: 'draft' | 'published' | 'archived';
     fechaCreacion: string;
     fechaActualizacion: string;
-    campañas: CampaignWithMetricsForUI[];
+    campanas: CampaignWithMetricsForUI[];
+    metricasEstudiantes?: MetricasEstudiantesForUI;
+    gruposActivos?: GrupoActivoForUI[];
 }
 
 // ============================================
-// VERSION CAMPAIGNS (campañas de una versión específica)
+// VERSION CAMPAIGNS (campanas de una versión específica)
 // ============================================
 
 export interface VersionCampaignsFromAPI {
@@ -522,6 +610,8 @@ export interface VersionCampaignsFromAPI {
     };
     total_campaigns: number;
     campaigns: CampaignWithMetricsFromAPI[];
+    metricas_estudiantes?: MetricasEstudiantesFromAPI;
+    grupos_activos?: GrupoActivoFromAPI[];
 }
 
 export interface VersionCampaignsForUI {
@@ -532,6 +622,13 @@ export interface VersionCampaignsForUI {
         precio: number;
         estado: 'draft' | 'published' | 'archived';
     };
-    totalCampañas: number;
-    campañas: CampaignWithMetricsForUI[];
+    totalCampanas: number;
+    campanas: CampaignWithMetricsForUI[];
+    metricasEstudiantes?: MetricasEstudiantesForUI;
+    gruposActivos?: GrupoActivoForUI[];
 }
+
+
+
+
+

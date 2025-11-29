@@ -430,7 +430,7 @@ export default function PropuestaMetricasTable() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => window.location.href = `/marketing/campañas/${campaña.id}`}
+                        onClick={() => window.location.href = `/marketing/campaigns/${campaña.id}`}
                       >
                         <ExternalLink className="w-4 h-4" />
                       </Button>
