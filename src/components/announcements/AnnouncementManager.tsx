@@ -113,13 +113,8 @@ export function AnnouncementManager() {
 
   return (
     <>
-      {/* Banner - always on top */}
-      {activeBanner && (
-        <BannerAnnouncement
-          announcement={activeBanner}
-          onClose={() => handleClose(activeBanner.id)}
-        />
-      )}
+      {/* Banner - now shown in HeroSection instead */}
+      {/* Removed to avoid duplication */}
 
       {/* Modal - center overlay */}
       {activeModal && (

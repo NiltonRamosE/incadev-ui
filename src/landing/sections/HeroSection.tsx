@@ -14,7 +14,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import { config } from "@/config/technology-config";
+import { technologyApi } from "@/services/tecnologico/api";
 import Events3DCarousel from "../components/Events3DCarousel";
+import BannerCarousel3D from "../components/BannerCarousel3D";
+import type { Announcement } from "@/types/developer-web";
 
 interface HeroStats {
   students: number;
@@ -22,18 +25,11 @@ interface HeroStats {
   teachers: number;
 }
 
-interface Announcement {
-  id: number;
-  title: string;
-  summary: string;
-  link_url?: string | null;
-  button_text?: string | null;
-}
-
 export default function HeroSection() {
   const [stats, setStats] = useState<HeroStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [banners, setBanners] = useState<Announcement[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [dismissedIds, setDismissedIds] = useState<number[]>([]);
 
@@ -48,6 +44,7 @@ export default function HeroSection() {
   useEffect(() => {
     fetchHeroStats();
     fetchAnnouncements();
+    fetchBanners();
   }, []);
 
   const fetchHeroStats = async () => {
@@ -94,6 +91,24 @@ export default function HeroSection() {
       }
     } catch (error) {
       console.error("Error fetching announcements:", error);
+    }
+  };
+
+  const fetchBanners = async () => {
+    try {
+      const response = await technologyApi.developerWeb.announcements.published();
+
+      if (response.success && response.data?.data) {
+        // Filtrar solo banners tipo "banner" y ordenar por prioridad
+        const bannerItems = response.data.data
+          .filter((item: any) => item.item_type === "banner")
+          .sort((a: any, b: any) => (b.priority || 0) - (a.priority || 0));
+
+        setBanners(bannerItems);
+        console.log("Banners cargados:", bannerItems);
+      }
+    } catch (error) {
+      console.error("Error fetching banners:", error);
     }
   };
 
@@ -326,15 +341,19 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Events 3D Carousel */}
+        {/* 3D Carousel (Banners or Events) */}
         <div className="relative flex justify-center lg:justify-end">
           <div className="relative w-full">
             {/* Decorative background elements */}
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
             <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl" />
 
-            {/* 3D Carousel */}
-            <Events3DCarousel />
+            {/* 3D Carousel - Show Banners if available, otherwise Events */}
+            {banners.length > 0 ? (
+              <BannerCarousel3D banners={banners} />
+            ) : (
+              <Events3DCarousel />
+            )}
           </div>
         </div>
       </div>
