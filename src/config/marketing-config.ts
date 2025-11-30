@@ -4,10 +4,10 @@
  */
 
 export const config = {
-  //apiUrl: "https://instituto.cetivirgendelapuerta.com/backend/marketing/public/api",
-  apiUrl: "http://127.0.0.1:8002/api",
+  apiUrl: "https://instituto.cetivirgendelapuerta.com/backend/marketing/public/api",
+  //apiUrl: "http://127.0.0.1:8002/api",
   // Marketing backend auth and related services
-  authApiUrl: "http://127.0.0.1:8001/api", // Backend principal para autenticación
+  //authApiUrl: "http://127.0.0.1:8001/api", // Backend principal para autenticación
   // Metrics microservice. Used for batch metrics fetching.
   metricsApiUrl: "http://127.0.0.1:8006/api",
 
