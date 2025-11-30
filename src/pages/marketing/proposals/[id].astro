@@ -1675,9 +1675,7 @@ const mockTitle = `${proposalTitle} - INCADEV UI`;
           window.showSuccessModal("✅ ¡Campaña creada con éxito!");
         } catch (error) {
           console.error("[ID Page] Error creating campaign:", error);
-          alert(
-            `❌ Error al crear la campaña:\n\n${error instanceof Error ? error.message : "Error desconocido"}`,
-          );
+          showToast(`❌ Error al crear la campaña: ${error instanceof Error ? error.message : "Error desconocido"}`, 'error');
         } finally {
           btnSubmit.disabled = false;
           btnSubmit.textContent = originalText;

@@ -1060,6 +1060,52 @@ const { campaignId, campaignName } = Astro.props;
             }, 3000);
         }
 
+                // Generic confirm modal helper for this page
+                function showConfirmModal(message: string) {
+                        return new Promise((resolve) => {
+                                const existing = document.getElementById('confirmModal');
+                                if (!existing) {
+                                        // Create a simple confirm modal DOM
+                                        const modal = document.createElement('div');
+                                        modal.id = 'confirmModal';
+                                        modal.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4';
+                                        modal.innerHTML = `
+                                            <div class="bg-white dark:bg-gray-950 rounded-xl p-6 max-w-md w-full border border-gray-200 dark:border-gray-800">
+                                                <p id="confirmModalMessage" class="text-gray-900 dark:text-white font-medium text-lg"></p>
+                                                <div class="mt-4 flex justify-end gap-2">
+                                                    <button id="confirmModalNo" class="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg">Cancelar</button>
+                                                    <button id="confirmModalYes" class="px-4 py-2 bg-red-600 text-white rounded-lg">Eliminar</button>
+                                                </div>
+                                            </div>
+                                        `;
+                                        document.body.appendChild(modal);
+                                }
+
+                                const modal = document.getElementById('confirmModal');
+                                const msgEl = document.getElementById('confirmModalMessage');
+                                const yesBtn = document.getElementById('confirmModalYes');
+                                const noBtn = document.getElementById('confirmModalNo');
+                                if (!modal || !msgEl || !yesBtn || !noBtn) return resolve(false);
+
+                                msgEl.textContent = message;
+                                modal.classList.remove('hidden');
+                                modal.classList.add('flex');
+
+                                function cleanup() {
+                                        modal.classList.add('hidden');
+                                        modal.classList.remove('flex');
+                                        yesBtn.removeEventListener('click', onYes);
+                                        noBtn.removeEventListener('click', onNo);
+                                }
+
+                                function onYes() { cleanup(); resolve(true); }
+                                function onNo() { cleanup(); resolve(false); }
+
+                                yesBtn.addEventListener('click', onYes);
+                                noBtn.addEventListener('click', onNo);
+                        });
+                }
+
         function showLoading() {
             const overlay = document.getElementById("aiLoadingOverlay");
             overlay?.classList.remove("hidden");
@@ -1342,9 +1388,9 @@ const { campaignId, campaignName } = Astro.props;
                 updateStats();
                 renderPosts();
             } catch (error) {
-                console.error("Error loading:", error);
-                alert("Error al cargar la campaña");
-                window.location.href = "/marketing/campaigns";
+                    console.error("Error loading:", error);
+                    showToast("Error al cargar la campaña", "error");
+                    window.location.href = "/marketing/campaigns";
             }
         }
 
@@ -1479,7 +1525,8 @@ const { campaignId, campaignName } = Astro.props;
         };
 
         (window as any).eliminarPost = async (postId: number) => {
-            if (!confirm("¿Eliminar esta publicación?")) return;
+            const ok = await showConfirmModal("¿Eliminar esta publicación?");
+            if (!ok) return;
             try {
                 await deletePost(postId);
                 posts = posts.filter((p) => p.id !== postId);

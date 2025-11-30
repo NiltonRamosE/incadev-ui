@@ -8,14 +8,11 @@ export const config = {
   apiUrl: "http://127.0.0.1:8002/api",
   // Marketing backend auth and related services
   authApiUrl: "http://127.0.0.1:8001/api", // Backend principal para autenticación
-  // Explicit base URLs for related microservices so the UI can target the right hosts
-  // Point generationApiUrl to the marketing backend so the UI uses the marketing
-  // proxy/public-serving endpoints (e.g. /api/generation/image/{id}). This
-  // consolidates preview/download through the marketing service instead of
-  // calling the generative microservice directly.
+  // Metrics microservice. Used for batch metrics fetching.
+  metricsApiUrl: "http://127.0.0.1:8006/api",
+
   generationApiUrl: "http://127.0.0.1:8002/api",
   socialApiUrl: "http://127.0.0.1:8005/api", // socialmediaapi
-  //metricsApiUrl: "http://127.0.0.1:8006", // metricsapi (same host used for auth/service)
   environment: "development",
 
   endpoints: {

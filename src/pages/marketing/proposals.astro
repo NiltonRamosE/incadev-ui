@@ -764,17 +764,18 @@ import Layout from "../../layouts/MarketingLayout.astro";
     // ============================================
 
     (window as any).eliminarPropuesta = async function (id: number) {
-      if (!confirm("¿Estás seguro de eliminar esta propuesta?")) return;
+      const ok = await window.showConfirmModal("¿Estás seguro de eliminar esta propuesta?");
+      if (!ok) return;
 
       try {
         await deleteProposal(id);
         propuestas = propuestas.filter((p) => p.id !== id);
         updateStats();
         renderPropuestas();
-        alert("✅ Propuesta eliminada correctamente");
+        window.showSuccessModal("✅ Propuesta eliminada correctamente");
       } catch (error) {
         console.error("Error eliminando propuesta:", error);
-        alert("❌ Error al eliminar la propuesta");
+        showToast("❌ Error al eliminar la propuesta", "error");
       }
     };
 
@@ -946,7 +947,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
         // Validar que se haya seleccionado un público objetivo
         const targetAudience = formData.get("target_audience");
         if (!targetAudience) {
-          alert("⚠️ Por favor selecciona un público objetivo");
+          showToast("⚠️ Por favor selecciona un público objetivo", "warning");
           return;
         }
 
@@ -979,9 +980,7 @@ import Layout from "../../layouts/MarketingLayout.astro";
           // Mostrar modal de éxito en lugar de alert
           window.showSuccessModal("✅ ¡Propuesta creada con éxito!");
         } catch (error) {
-          alert(
-            `❌ Error al crear la propuesta:\n\n${error instanceof Error ? error.message : "Error desconocido"}`,
-          );
+          showToast(`❌ Error al crear la propuesta: ${error instanceof Error ? error.message : "Error desconocido"}`, 'error');
         } finally {
           btnSubmit.disabled = false;
           btnSubmit.textContent = originalText;
@@ -1029,5 +1028,46 @@ import Layout from "../../layouts/MarketingLayout.astro";
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("successModalClose")?.addEventListener("click", window.closeSuccessModal);
     });
+    
+    // Generic confirm modal that returns a Promise
+    window.showConfirmModal = function (message) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById("confirmModal");
+        const msgEl = document.getElementById("confirmModalMessage");
+        const yesBtn = document.getElementById("confirmModalYes");
+        const noBtn = document.getElementById("confirmModalNo");
+        if (!modal || !msgEl || !yesBtn || !noBtn) return resolve(false);
+
+        msgEl.textContent = message;
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+        function cleanup() {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          yesBtn.removeEventListener('click', onYes);
+          noBtn.removeEventListener('click', onNo);
+        }
+
+        function onYes() { cleanup(); resolve(true); }
+        function onNo() { cleanup(); resolve(false); }
+
+        yesBtn.addEventListener('click', onYes);
+        noBtn.addEventListener('click', onNo);
+      });
+    };
   </script>
+
+  <!-- Confirm Modal -->
+  <div id="confirmModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-950 rounded-xl p-6 max-w-md w-full border border-gray-200 dark:border-gray-800">
+      <div class="mb-4">
+        <p id="confirmModalMessage" class="text-gray-900 dark:text-white font-medium text-lg"></p>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button id="confirmModalNo" class="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg">Cancelar</button>
+        <button id="confirmModalYes" class="px-4 py-2 bg-red-600 text-white rounded-lg">Eliminar</button>
+      </div>
+    </div>
+  </div>
 </Layout>
