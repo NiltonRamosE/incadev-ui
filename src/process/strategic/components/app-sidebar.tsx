@@ -131,6 +131,14 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
+                    <a href={routes.admin.management.documents}>
+                      <IconFileText className="h-4 w-4" />
+                      <span>Documentos</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
                     <a href={routes.admin.management.plans}>
                       <IconFileText className="h-4 w-4" />
                       <span>Planes</span>
