@@ -11,7 +11,33 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@/components/ui/sidebar"
-import { IconLogout, IconUserCircle, IconHome, IconUsers, IconShield, IconKey, IconSettings, IconTicket, IconServer, IconAlertTriangle, IconFileText, IconCode, IconUser, IconTrendingUp, IconChartBar, IconMessageCircle, IconCalendar, IconTarget, IconMap, IconBuilding } from "@tabler/icons-react";
+import {
+  IconLogout,
+  IconUserCircle,
+  IconHome,
+  IconUsers,
+  IconSettings,
+  IconUser,
+  IconRocket,
+  IconBuildingCommunity,
+  IconHandClick,
+  IconFolder,
+  IconMap2,
+  IconShieldCheck,
+  IconMessages,
+  IconGauge,
+  IconActivity,
+  IconFileAnalytics,
+  IconBellRinging,
+  IconTargetArrow,
+  IconRoute,
+  IconChartDonut3,
+  IconAlertTriangle,
+  IconCalendarEvent,
+  IconCalendarStats,
+  IconChartBar,
+  IconChartLine,
+} from "@tabler/icons-react";
 import { toast } from "sonner";
 import { config } from "@/config/technology-config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -97,7 +123,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
       return (
         <>
           <SidebarGroup>
-            <SidebarGroupLabel>Administración</SidebarGroupLabel>
+            <SidebarGroupLabel>Planificación</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -108,7 +134,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.admin.management.initiatives}>
-                      <IconTrendingUp className="h-4 w-4" />
+                      <IconRocket className="h-4 w-4" />
                       <span>Iniciativas</span>
                     </a>
                   </SidebarMenuButton>
@@ -116,7 +142,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.admin.management.organizations}>
-                      <IconBuilding className="h-4 w-4" />
+                      <IconBuildingCommunity className="h-4 w-4" />
                       <span>Organizaciones</span>
                     </a>
                   </SidebarMenuButton>
@@ -124,7 +150,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.admin.management.agreements}>
-                      <IconFileText className="h-4 w-4" />
+                      <IconHandClick className="h-4 w-4" />
                       <span>Convenios</span>
                     </a>
                   </SidebarMenuButton>
@@ -132,7 +158,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.admin.management.documents}>
-                      <IconFileText className="h-4 w-4" />
+                      <IconFolder className="h-4 w-4" />
                       <span>Documentos</span>
                     </a>
                   </SidebarMenuButton>
@@ -140,7 +166,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.admin.management.plans}>
-                      <IconFileText className="h-4 w-4" />
+                      <IconMap2 className="h-4 w-4" />
                       <span>Planes</span>
                     </a>
                   </SidebarMenuButton>
@@ -148,7 +174,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.admin.management.calidad}>
-                      <IconFileText className="h-4 w-4" />
+                      <IconShieldCheck className="h-4 w-4" />
                       <span>Calidad</span>
                     </a>
                   </SidebarMenuButton>
@@ -169,7 +195,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.coordination.communications}>
-                      <IconMessageCircle className="h-4 w-4" />
+                      <IconMessages className="h-4 w-4" />
                       <span>Comunicaciones</span>
                     </a>
                   </SidebarMenuButton>
@@ -220,7 +246,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.planning.strategic_plans}>
-                      <IconMap className="h-4 w-4" />
+                      <IconMap2 className="h-4 w-4" />
                       <span>Planes Estratégicos</span>
                     </a>
                   </SidebarMenuButton>
@@ -228,7 +254,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.planning.objectives}>
-                      <IconTarget className="h-4 w-4" />
+                      <IconTargetArrow className="h-4 w-4" />
                       <span>Objetivos</span>
                     </a>
                   </SidebarMenuButton>
@@ -236,7 +262,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.planning.initiatives}>
-                      <IconTrendingUp className="h-4 w-4" />
+                      <IconRocket className="h-4 w-4" />
                       <span>Iniciativas</span>
                     </a>
                   </SidebarMenuButton>
@@ -244,7 +270,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.planning.roadmaps}>
-                      <IconFileText className="h-4 w-4" />
+                      <IconRoute className="h-4 w-4" />
                       <span>Roadmaps</span>
                     </a>
                   </SidebarMenuButton>
@@ -281,7 +307,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.monitoring.indicators}>
-                      <IconChartBar className="h-4 w-4" />
+                      <IconGauge className="h-4 w-4" />
                       <span>Indicadores</span>
                     </a>
                   </SidebarMenuButton>
@@ -289,7 +315,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.monitoring.metrics}>
-                      <IconTrendingUp className="h-4 w-4" />
+                      <IconActivity className="h-4 w-4" />
                       <span>Métricas</span>
                     </a>
                   </SidebarMenuButton>
@@ -297,7 +323,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.monitoring.reports}>
-                      <IconFileText className="h-4 w-4" />
+                      <IconFileAnalytics className="h-4 w-4" />
                       <span>Reportes</span>
                     </a>
                   </SidebarMenuButton>
@@ -305,7 +331,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.monitoring.alerts}>
-                      <IconAlertTriangle className="h-4 w-4" />
+                      <IconBellRinging className="h-4 w-4" />
                       <span>Alertas</span>
                     </a>
                   </SidebarMenuButton>
@@ -342,7 +368,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.analysis.swot}>
-                      <IconChartBar className="h-4 w-4" />
+                      <IconChartDonut3 className="h-4 w-4" />
                       <span>Análisis FODA</span>
                     </a>
                   </SidebarMenuButton>
@@ -350,7 +376,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.analysis.benchmarking}>
-                      <IconTarget className="h-4 w-4" />
+                      <IconTargetArrow className="h-4 w-4" />
                       <span>Benchmarking</span>
                     </a>
                   </SidebarMenuButton>
@@ -366,7 +392,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.analysis.market_research}>
-                      <IconFileText className="h-4 w-4" />
+                      <IconChartBar className="h-4 w-4" />
                       <span>Investigación de Mercado</span>
                     </a>
                   </SidebarMenuButton>
@@ -403,7 +429,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.coordination.meetings}>
-                      <IconCalendar className="h-4 w-4" />
+                      <IconCalendarEvent className="h-4 w-4" />
                       <span>Reuniones</span>
                     </a>
                   </SidebarMenuButton>
@@ -411,7 +437,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.coordination.communications}>
-                      <IconMessageCircle className="h-4 w-4" />
+                      <IconMessages className="h-4 w-4" />
                       <span>Comunicaciones</span>
                     </a>
                   </SidebarMenuButton>
@@ -427,7 +453,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.coordination.calendar}>
-                      <IconCalendar className="h-4 w-4" />
+                      <IconCalendarStats className="h-4 w-4" />
                       <span>Calendario</span>
                     </a>
                   </SidebarMenuButton>
@@ -464,7 +490,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.reporting.executive_reports}>
-                      <IconFileText className="h-4 w-4" />
+                      <IconFileAnalytics className="h-4 w-4" />
                       <span>Reportes Ejecutivos</span>
                     </a>
                   </SidebarMenuButton>
@@ -480,7 +506,7 @@ export function AppSidebar({ token, user, ...props }: AppSidebarProps) {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <a href={routes.reporting.performance_reports}>
-                      <IconTrendingUp className="h-4 w-4" />
+                      <IconChartLine className="h-4 w-4" />
                       <span>Reportes de Desempeño</span>
                     </a>
                   </SidebarMenuButton>

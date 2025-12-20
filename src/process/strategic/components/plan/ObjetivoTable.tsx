@@ -23,6 +23,23 @@ interface ObjetivoTableProps {
   onViewKpis?: (id: number) => void;
 }
 
+const formatKpi = (kpi: KpiRef | number | string, index: number) => {
+  if (typeof kpi === "number" || typeof kpi === "string") {
+    return {
+      key: `${kpi}-${index}`,
+      label: `KPI ${kpi}`,
+      detail: "",
+    };
+  }
+  const label = kpi.name || `KPI ${kpi.id ?? index + 1}`;
+  const target = kpi.target ? `${kpi.target} ${kpi.unit ?? ""}`.trim() : "";
+  return {
+    key: `${kpi.id ?? index}-${label}`,
+    label,
+    detail: target,
+  };
+};
+
 export const ObjetivoTable = ({
   data,
   onEdit,
@@ -52,24 +69,32 @@ export const ObjetivoTable = ({
             {obj.title}
           </td>
           <td className="text-gray-700 dark:text-gray-200 text-left align-middle py-2">
-            {obj.description}
+            <p className="line-clamp-3 whitespace-pre-wrap">{obj.description}</p>
           </td>
           <td className="text-gray-700 dark:text-gray-200 text-left align-middle py-2">
-            <ul className="list-disc pl-5 space-y-1">
-              {obj.kpis.map((kpi, index) => {
-                if (typeof kpi === "number" || typeof kpi === "string") {
-                  return <li key={index}>KPI {kpi}</li>;
-                }
-                const label = kpi.name || `KPI ${kpi.id ?? index + 1}`;
-                const target = kpi.target ? `${kpi.target} ${kpi.unit ?? ""}`.trim() : "";
+            <div className="flex flex-wrap gap-2">
+              {obj.kpis.slice(0, 4).map((kpi, index) => {
+                const meta = formatKpi(kpi, index);
                 return (
-                  <li key={index} className="flex items-center gap-2">
-                    <span>{label}</span>
-                    {target && <span className="text-xs text-gray-500">{target}</span>}
-                  </li>
+                  <span
+                    key={meta.key}
+                    className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs text-blue-800 dark:border-blue-900 dark:bg-blue-900/20 dark:text-blue-200"
+                  >
+                    {meta.label}
+                    {meta.detail && (
+                      <span className="text-[10px] text-blue-700 dark:text-blue-300">
+                        {meta.detail}
+                      </span>
+                    )}
+                  </span>
                 );
               })}
-            </ul>
+              {obj.kpis.length > 4 && (
+                <span className="text-xs text-gray-500">
+                  +{obj.kpis.length - 4} más
+                </span>
+              )}
+            </div>
           </td>
           <td className="text-right align-middle py-2">
             <div className="flex justify-end gap-2">
